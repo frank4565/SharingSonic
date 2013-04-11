@@ -10,6 +10,7 @@
 #import "SSDragStatusView.h"
 #import "MD5.h"
 #import "SSBonjour.h"
+#import "SSFile.h"
 
 @interface SSStatusBarController () <SSDragStatusViewDelegate>
 @property (nonatomic, strong) NSMutableArray *sonicData;
@@ -87,29 +88,30 @@
     //    [self.progressView setProgress:percentage animated:YES];
 }
 
-//- (void)downloadDidFinishWithData:(NSData *)data contentType:(DataType)type
-//{
-//    //    [self _stopNetworkingAndUpdateUI];
-//    
-//    if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
-//        //        NSSonicData *newImage = [NSSonicData dataWithImage:[UIImage imageWithData:data]
-//        //                                                      date:[NSDate dateWithTimeIntervalSinceNow:0]
-//        //                                                      type:SonicTypePhoto];
-//        //        [self _addObjectToSonicData:newImage];
-////        self.imageView.image = [[NSImage alloc] initWithData:data];
+- (void)downloadDidFinishWithData:(NSData *)data contentType:(DataType)type
+{
+    //    [self _stopNetworkingAndUpdateUI];
+    
+    if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
+        //        NSSonicData *newImage = [NSSonicData dataWithImage:[UIImage imageWithData:data]
+        //                                                      date:[NSDate dateWithTimeIntervalSinceNow:0]
+        //                                                      type:SonicTypePhoto];
+        //        [self _addObjectToSonicData:newImage];
+//        self.imageView.image = [[NSImage alloc] initWithData:data];
 //        [data writeToFile:[@"~/Downloads/image.jpg" stringByExpandingTildeInPath] atomically:NO];
-//        
-//    } else if (type == kDataTypeText) {
-//        //        NSSonicData *newText = [NSSonicData dataWithText:[[NSString alloc] initWithData:data
-//        //                                                                               encoding:NSUTF8StringEncoding]
-//        //                                                    date:[NSDate dateWithTimeIntervalSinceNow:0]
-//        //                                                    type:SonicTypeText];
-//        //        [self _addObjectToSonicData:newText];
-////        self.textView.string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//    } else {
-//        NSLog(@"Error occurs!");
-//    }
-//}
+        [SSFile saveFileToDocumentsOfName:@"image.jpg" withData:data];
+        
+    } else if (type == kDataTypeText) {
+        //        NSSonicData *newText = [NSSonicData dataWithText:[[NSString alloc] initWithData:data
+        //                                                                               encoding:NSUTF8StringEncoding]
+        //                                                    date:[NSDate dateWithTimeIntervalSinceNow:0]
+        //                                                    type:SonicTypeText];
+        //        [self _addObjectToSonicData:newText];
+//        self.textView.string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    } else {
+        NSLog(@"Error occurs!");
+    }
+}
 
 - (void)downloadDidFinishWithFile:(NSString *)filePath
 {

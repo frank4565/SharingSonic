@@ -975,9 +975,10 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
         self.hashString = [[MD5 defaultMD5] md5ForData:pictureData];
         if (self.bonjour.foundServices.count > 0) {
             [self.bonjour sendFile:picturePath];
-        } else {
-            [[NetworkHelper helper] uploadData:pictureData contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
-        }
+        } // else {
+        // Upload picture whenever there is bonjour service found or not.
+        [[NetworkHelper helper] uploadData:pictureData contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
+//        }
         [self _replaceObjectAfterAdding:image correspondingHash:self.hashString];
     }];
 }
