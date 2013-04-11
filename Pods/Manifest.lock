@@ -1,0 +1,16 @@
+PODS:
+  - AFNetworking (1.2.0)
+  - DTBonjour (1.0.0)
+  - iCarousel (1.7.4)
+
+DEPENDENCIES:
+  - AFNetworking
+  - DTBonjour
+  - iCarousel
+
+SPEC CHECKSUMS:
+  AFNetworking: 3cbae45f61a9f995cdbd56bd571223910d7f4e44
+  DTBonjour: b88769fc76c5557b2ce2111d8305cd56822d63d8
+  iCarousel: 7f260b9f829005bb32d72ad19376a2a32ae3e418
+
+COCOAPODS: 0.18.0

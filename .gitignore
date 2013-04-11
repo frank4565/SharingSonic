@@ -1,0 +1,18 @@
+# Xcode
+.DS_Store
+build/
+*.pbxuser
+!SharingSonic.pbxuser
+*.mode1v3
+!SharingSonic.mode1v3
+*.mode2v3
+!SharingSonic.mode2v3
+*.perspectivev3
+!SharingSonic.perspectivev3
+*.xcworkspace
+!SharingSonic.xcworkspace
+xcuserdata
+profile
+*.moved-aside
+DerivedData
+.idea/
