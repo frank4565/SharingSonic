@@ -131,6 +131,7 @@
 		1E98422D171694ED00692C86 /* Heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E98422B171694ED00692C86 /* Heart.png */; };
 		1E98422F171695CE00692C86 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E98422E171695CD00692C86 /* AudioToolbox.framework */; };
 		1E9842321716967900692C86 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E9842311716967800692C86 /* Cocoa.framework */; };
+		1EADC3091716F92E0074E2A1 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E9841A017168B9000692C86 /* OpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B70AA35FD62F4960BE2D9D6C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B5054C0946840A6AD4E1500 /* libPods.a */; };
 		C4C879513BAE4D4593D028E2 /* libPods-SharingSonicMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F32BFD0D675C4F4BBE982FC0 /* libPods-SharingSonicMac.a */; };
 /* End PBXBuildFile section */
@@ -1033,6 +1034,7 @@
 				1E9842271716944400692C86 /* SSFile.m in Sources */,
 				1E9842281716945000692C86 /* NSString+DTUTI.m in Sources */,
 				1E9842291716945000692C86 /* NSString+DTPaths.m in Sources */,
+				1EADC3091716F92E0074E2A1 /* OpenUDID.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

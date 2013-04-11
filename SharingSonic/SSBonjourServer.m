@@ -9,6 +9,7 @@
 #import "SSBonjourServer.h"
 #import "DTBonjourDataConnection.h"
 #import "NSString+DTUTI.h"
+#import "OpenUDID.h"
 
 @interface SSBonjourServer ()
 @property (nonatomic, readwrite) NSString *identifier;
@@ -18,21 +19,9 @@
 
 - (NSString *)identifier
 {
-    if (!_identifier) {
-        
-        // Moved the following code to NSString+DTUTI
-        
-//        // from https://github.com/Cocoanetics/DTFoundation/blob/master/Core/Source/NSString%2BDTUtilities.m
-//        CFUUIDRef uuidObj = CFUUIDCreate(nil);//create a new UUID
-//        
-//        //get the string representation of the UUID
-//        _identifier = (__bridge_transfer NSString *)CFUUIDCreateString(nil, uuidObj);
-//        CFRelease(uuidObj);
-//        
-//        //        NSLog(@"Created identifier: %@", _identifier);
-        
-        
-        _identifier = [NSString stringWithUUID];
+    if (!_identifier) {        
+//        _identifier = [NSString stringWithUUID];
+        _identifier = [OpenUDID value];
     }
     return _identifier;
 }
