@@ -367,10 +367,10 @@
             </objects>
             <point key="canvasLocation" x="-1362" y="-67"/>
         </scene>
-        <!--View Controller - Active Locations-->
+        <!--Active Location View Controller - Active Locations-->
         <scene sceneID="EEd-hY-eww">
             <objects>
-                <viewController id="52q-X7-hQP" sceneMemberID="viewController">
+                <viewController id="52q-X7-hQP" customClass="SSActiveLocationViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Qm2-UG-wKh">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -419,6 +419,10 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Active Locations" id="VhB-z2-cc2"/>
+                    <connections>
+                        <outlet property="mapView" destination="0kB-RR-BY2" id="osh-vA-uTp"/>
+                        <outlet property="tableView" destination="oJ1-ef-s9H" id="22K-Um-haI"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="06d-LN-IOm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -530,71 +534,6 @@
         <image name="SidebarBackground.png" width="306" height="501"/>
         <image name="User.png" width="26" height="26"/>
     </resources>
-    <classes>
-        <class className="ImageViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="MainViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="add:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="addText:" candidateClass="UIButton"/>
-                <relationship kind="action" name="choosePhoto:" candidateClass="UIButton"/>
-                <relationship kind="action" name="doneSetting:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="action" name="doneTextInput:" candidateClass="UIStoryboardSegue"/>
-                <relationship kind="action" name="openInApps:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="share:" candidateClass="UIBarButtonItem"/>
-                <relationship kind="action" name="takePhoto:" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="bottomToolbar" candidateClass="UIToolbar"/>
-                <relationship kind="outlet" name="carousel" candidateClass="iCarousel"/>
-                <relationship kind="outlet" name="openinButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
-                <relationship kind="outlet" name="sendButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="waveform" candidateClass="WaveView"/>
-            </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="SSImageViewController" superclassName="ImageViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SSImageViewController.h"/>
-        </class>
-        <class className="SidebarViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SidebarViewController.h"/>
-        </class>
-        <class className="TestPushViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TestPushViewController.h"/>
-        </class>
-        <class className="TextMessageViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TextMessageViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="textView" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-        <class className="UIButtonWithLargerTapArea" superclassName="UIButton">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIButtonWithLargerTapArea.h"/>
-        </class>
-        <class className="UIStoryboardSegue" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIStoryboardSegue.h"/>
-        </class>
-        <class className="WaveView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/WaveView.h"/>
-            <relationships>
-                <relationship kind="outlet" name="dataSource"/>
-            </relationships>
-        </class>
-        <class className="iCarousel" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/iCarousel.h"/>
-            <relationships>
-                <relationship kind="outlet" name="dataSource"/>
-                <relationship kind="outlet" name="delegate"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
