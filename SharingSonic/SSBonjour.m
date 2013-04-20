@@ -108,6 +108,9 @@
 		if (![self _isLocalServiceIdentifier:identifier]) {
 			[self.foundServices addObject:service];
             NSLog(@"updateService: %@", service);
+            if ([self.delegate respondsToSelector:@selector(didAddNewBonjourService:)]) {
+                [self.delegate didAddNewBonjourService:service];
+            }
 		} else {
             //            NSLog(@"didnotUpdateServices: %@", service);
         }

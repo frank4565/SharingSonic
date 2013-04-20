@@ -23,6 +23,9 @@
 - (void)didSendDataLengthInTotal:(long long)totalSentLength withTotalBytesExpectedToWrite:(long long)totalBytesExpectedToWrite;
 - (void)didReceiveDataLengthInTotal:(long long)totalReceivedLength withTotalBytesExpectedToRead:(long long)totalBytesExpectedToRead;
 
+@optional
+- (void)didAddNewBonjourService:(NSNetService *)service;
+
 @end
 
 @interface NetworkHelper : NSObject <NSURLConnectionDelegate>
@@ -35,7 +38,7 @@
     WithHashString:(NSString *)hashString
           delegate:(id <NetworkHelperDelegate>)delegate;
 
-#if TARGET_OS_IPHONE
+//#if TARGET_OS_IPHONE
 // Helper method for interact with push server
 +(void)joinPushServerWithUdid:(NSString *)udid
                    secretCode:(NSString *)code
@@ -53,7 +56,7 @@
 +(void)messagePushServerWithUdid:(NSString *)udid
                             text:(NSString *)text
                completionHandler:(void(^)())completion;
-#endif
+//#endif
 
 @property (weak,nonatomic) id <NetworkHelperDelegate> delegate;
 

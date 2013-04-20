@@ -12,12 +12,7 @@
 
 @interface SSBonjour : NSObject
 
-//@property (nonatomic, strong, readonly) NSMutableArray *createdClients;
-//@property (nonatomic, strong, readonly) SSBonjourServer *server;
-//@property (nonatomic, strong, readonly) NSNetServiceBrowser *serviceBrowser;
-//@property (nonatomic, strong, readonly) NSMutableSet *unidentifiedServices;
 @property (nonatomic, strong, readonly) NSMutableArray *foundServices;
-//@property (nonatomic, strong, readonly) NSMutableArray *createdServers;
 @property (nonatomic, weak) id<NetworkHelperDelegate> delegate;
 
 - (id)initWithNone;
