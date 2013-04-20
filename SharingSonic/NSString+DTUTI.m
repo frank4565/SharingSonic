@@ -18,20 +18,20 @@
 {
 	CFStringRef typeForExt = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,(__bridge CFStringRef)extension , NULL);
 	NSString *result = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(typeForExt, kUTTagClassMIMEType);
-	
-	if (!result)
-	{
-		return @"application/octet-stream";
+    CFRelease(typeForExt);
+
+	if (!result) {
+		result = @"application/octet-stream";
 	}
-	
 	return result;
 }
 
 + (NSString *)fileTypeDescriptionForFileExtension:(NSString *)extension
 {
 	CFStringRef typeForExt = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,(__bridge CFStringRef)extension , NULL);
-	
-	return (__bridge_transfer NSString *)UTTypeCopyDescription(typeForExt);
+    NSString *result = (__bridge_transfer NSString *)UTTypeCopyDescription(typeForExt);
+    CFRelease(typeForExt);
+	return result;
 }
 
 + (NSString *)universalTypeIdentifierForFileExtension:(NSString *)extension

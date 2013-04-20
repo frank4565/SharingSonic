@@ -93,6 +93,8 @@
 
 - (id)initWithFile:(NSString *)filePath
 {
+    self = [super init];
+    
     self.filePath = filePath;
     self.fileName = filePath.pathComponents.lastObject;
     self.fileType = [NSString universalTypeIdentifierForFileExtension:filePath.pathExtension];
@@ -122,6 +124,8 @@
 
 - (id)initWithData:(NSData *)data
 {
+    self = [super init];
+    
     self.data = data;
     if ([self _hasCompleteHeader]) {
         [self _decodeHeader];
