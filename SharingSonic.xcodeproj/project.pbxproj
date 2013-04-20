@@ -1053,6 +1053,7 @@
 				1E9842271716944400692C86 /* SSFile.m in Sources */,
 				1E9842281716945000692C86 /* NSString+DTUTI.m in Sources */,
 				1E9842291716945000692C86 /* NSString+DTPaths.m in Sources */,
+				1EADC3091716F92E0074E2A1 /* OpenUDID.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
