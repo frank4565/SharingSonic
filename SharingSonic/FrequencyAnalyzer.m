@@ -151,6 +151,9 @@ static id defaultAnalyzer = nil;
         }
     }
     float freq = maxIndex * SAMPLE_RATE / FFT_SIZE;
+    
+    // Fix the unbounded memory growth.
+    destroyfft(fft);
     return freq;
 }
 
