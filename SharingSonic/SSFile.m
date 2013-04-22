@@ -16,6 +16,7 @@
 
 - (NSArray *)fileArray
 {
+    // Since saveFileInfoOfPath:withHashString: is a class method, return the latest list everytime.
     return [[NSUserDefaults standardUserDefaults] arrayForKey:kFileList];
 }
 

@@ -867,7 +867,7 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
             }
         }
             
-}
+    }
     
     id content = self.ssObjects[index][KEY_FOR_DATA];
     
@@ -887,7 +887,19 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 //            });
 //        });
         ((FXImageView *)view).processedImage = [UIImage imageNamed:@"placeholder.png"];
-        ((FXImageView *)view).image = [UIImage imageWithData:content];
+        if ([content isKindOfClass:[NSData class]]) {
+            ((FXImageView *)view).image = [UIImage imageWithData:content];
+        } else if ([content isKindOfClass:[UIImage class]]) {
+            ((FXImageView *)view).image = content;
+        } else {
+            return nil;
+        }
+        ((FXImageView *)view).customEffectsBlock = ^(UIImage *image){
+            NSMutableDictionary *obj = [self.ssObjects[index] mutableCopy];
+            obj[KEY_FOR_DATA] = image;
+            self.ssObjects[index] = [obj copy];
+            return image;
+        };
     } else if (type == kDataTypeText) {
         textView.text = content;
     } else if (type == kDataTypeUnsupported) {
@@ -897,6 +909,7 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 //    [(ReflectionView *)view update];
     return view;
 }
+
 
 #pragma mark - CarouselDelegate
 
