@@ -69,7 +69,14 @@ static bool running = true;
 //    for (int i = 0; i < SINGLE_BUFFER_SAMPLE_COUNT; i++) {
 //        printf("%f ",samples[i]);
 //    }
-    [self.delegate analyzeDidFinishWithResultFrequency:[self _fftFunctionToSamples:samples]];
+    dispatch_queue_t fft = dispatch_queue_create("FFT", NULL);
+    dispatch_async(fft, ^{
+        float freq = 0;
+        freq = [self _fftFunctionToSamples:samples];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate analyzeDidFinishWithResultFrequency:freq];
+        });
+    });
 }
 
 

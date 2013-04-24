@@ -418,10 +418,18 @@
     
     if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
         UIImage *image = [[UIImage alloc] initWithData:data];
-        [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
+        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+            [self _replaceObjectAfterAdding:image correspondingHash:hashStringOfData];
+        } else {
+            [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
+        }
     } else if (type == kDataTypeText) {
         NSString *receivedText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        [self _addObject:receivedText toCarousel:self.carousel withHash:hashStringOfData];
+        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+            [self _replaceObjectAfterAdding:receivedText correspondingHash:hashStringOfData];
+        } else {
+            [self _addObject:receivedText toCarousel:self.carousel withHash:hashStringOfData];
+        }
     } else {
         NSLog(@"Error occurs!");
     }
@@ -544,7 +552,7 @@
     NSLog(@"Get the analyzed result: %@",resultHashString);
     BOOL same = NO;
     for (NSDictionary *ssObject in self.ssObjects) {
-        if ([ssObject[KEY_FOR_HASH] isEqualToString:resultHashString]) {
+        if ([ssObject[KEY_FOR_TYPE] intValue] != kDataTypeNoType && [ssObject[KEY_FOR_HASH] isEqualToString:resultHashString]) {
             same = YES;
             NSUInteger index = [self.ssObjects indexOfObject:ssObject];
             [self.carousel scrollToItemAtIndex:index animated:YES];
