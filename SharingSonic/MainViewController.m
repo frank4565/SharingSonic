@@ -468,55 +468,55 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
     
 }
 
-#pragma mark - SidebarViewControllerDelegate
-
-- (void)didAddNewText:(NSString *)text
-{
-//    NSSonicData *newText = [NSSonicData dataWithText:text date:[NSDate dateWithTimeIntervalSinceNow:0] type:SonicTypeText];
-//    [self _addObjectToSonicData:newText];
-//    [self _resetContentViewWithObject:text];
-    
-    NSData *dataToSend = [text dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *hashString = [[MD5 defaultMD5] md5ForData:dataToSend];
-    
-//    [self _addObjectToCollectionView:text hashString:hashString];
-    [self _addObject:text toCarousel:self.carousel withHash:hashString];
-    self.hashString = hashString;
-    
-    [self _startNetworkingAndUpdateUI];
-    [[NetworkHelper helper] uploadData:dataToSend contentType:kDataTypeText WithHashString:self.hashString delegate:self];
-}
-
-- (void)didAddNewPhoto:(UIImage *)image corespondingData:(NSData *)data
-{
-//    NSSonicData *newPhoto = [NSSonicData dataWithImage:image date:[NSDate dateWithTimeIntervalSinceNow:0] type:SonicTypePhoto];
-//    [self _addObjectToSonicData:newPhoto];
-//    [self _addObjectToCollectionView:image hashString:[[MD5 defaultMD5] md5ForData:data]];
-//    [self _resetContentViewWithObject:image];
-    
-    [self _addObject:image toCarousel:self.carousel withHash:[[MD5 defaultMD5] md5ForData:data]];
-    
-    self.hashString = [[MD5 defaultMD5] md5ForData:data];
-    
-    [self _startNetworkingAndUpdateUI];
-    
-    if (self.bonjour.foundServices.count > 0) {
-//        [self.bonjour sendData:data];
-    } else {
-        [[NetworkHelper helper] uploadData:data contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
-    }
-}
-
-- (void)willExitMainScreen
-{
-//    if ([SoundGenerator defaultGenerator].isSending) {
-//        [[SoundGenerator defaultGenerator] stopSound];
+//#pragma mark - SidebarViewControllerDelegate
+//
+//- (void)didAddNewText:(NSString *)text
+//{
+////    NSSonicData *newText = [NSSonicData dataWithText:text date:[NSDate dateWithTimeIntervalSinceNow:0] type:SonicTypeText];
+////    [self _addObjectToSonicData:newText];
+////    [self _resetContentViewWithObject:text];
+//    
+//    NSData *dataToSend = [text dataUsingEncoding:NSUTF8StringEncoding];
+//    NSString *hashString = [[MD5 defaultMD5] md5ForData:dataToSend];
+//    
+////    [self _addObjectToCollectionView:text hashString:hashString];
+//    [self _addObject:text toCarousel:self.carousel withHash:hashString];
+//    self.hashString = hashString;
+//    
+//    [self _startNetworkingAndUpdateUI];
+//    [[NetworkHelper helper] uploadData:dataToSend contentType:kDataTypeText WithHashString:self.hashString delegate:self];
+//}
+//
+//- (void)didAddNewPhoto:(UIImage *)image corespondingData:(NSData *)data
+//{
+////    NSSonicData *newPhoto = [NSSonicData dataWithImage:image date:[NSDate dateWithTimeIntervalSinceNow:0] type:SonicTypePhoto];
+////    [self _addObjectToSonicData:newPhoto];
+////    [self _addObjectToCollectionView:image hashString:[[MD5 defaultMD5] md5ForData:data]];
+////    [self _resetContentViewWithObject:image];
+//    
+//    [self _addObject:image toCarousel:self.carousel withHash:[[MD5 defaultMD5] md5ForData:data]];
+//    
+//    self.hashString = [[MD5 defaultMD5] md5ForData:data];
+//    
+//    [self _startNetworkingAndUpdateUI];
+//    
+//    if (self.bonjour.foundServices.count > 0) {
+////        [self.bonjour sendData:data];
+//    } else {
+//        [[NetworkHelper helper] uploadData:data contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
 //    }
-//    [[SoundReceiver defaultReceiver] pauseRecording];
-
-    //    self.waveform.dataSource = nil;
-    //    [SoundReceiver defaultReceiver].delegate = nil;
-}
+//}
+//
+//- (void)willExitMainScreen
+//{
+////    if ([SoundGenerator defaultGenerator].isSending) {
+////        [[SoundGenerator defaultGenerator] stopSound];
+////    }
+////    [[SoundReceiver defaultReceiver] pauseRecording];
+//
+//    //    self.waveform.dataSource = nil;
+//    //    [SoundReceiver defaultReceiver].delegate = nil;
+//}
 
 #pragma mark - SoundGeneratorDelegate
 - (void)soundGeneratingWillStart
@@ -867,7 +867,7 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
             }
         }
             
-}
+    }
     
     id content = self.ssObjects[index][KEY_FOR_DATA];
     
@@ -887,7 +887,19 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 //            });
 //        });
         ((FXImageView *)view).processedImage = [UIImage imageNamed:@"placeholder.png"];
-        ((FXImageView *)view).image = [UIImage imageWithData:content];
+        if ([content isKindOfClass:[NSData class]]) {
+            ((FXImageView *)view).image = [UIImage imageWithData:content];
+        } else if ([content isKindOfClass:[UIImage class]]) {
+            ((FXImageView *)view).image = content;
+        } else {
+            return nil;
+        }
+        ((FXImageView *)view).customEffectsBlock = ^(UIImage *image){
+            NSMutableDictionary *obj = [self.ssObjects[index] mutableCopy];
+            obj[KEY_FOR_DATA] = image;
+            self.ssObjects[index] = [obj copy];
+            return image;
+        };
     } else if (type == kDataTypeText) {
         textView.text = content;
     } else if (type == kDataTypeUnsupported) {
@@ -897,6 +909,7 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 //    [(ReflectionView *)view update];
     return view;
 }
+
 
 #pragma mark - CarouselDelegate
 
