@@ -158,6 +158,23 @@
     }
 }
 
+- (void)sendFile:(NSString *)filePath toServices:(NSNetService *)service
+{
+    SSBonjourData *ssData = [[SSBonjourData alloc] initWithFile:filePath];
+	if (ssData.data) {
+        [self _sendData:ssData.data];
+        
+        SSBonjourClient *client = [[SSBonjourClient alloc] initWithService:service];
+        client.delegate = self;
+        [client open];
+        
+        NSError *error;
+        [client sendObject:ssData.data error:&error];
+        
+        [self.createdClients addObject:client];
+    }
+}
+
 #pragma mark NetServiceBrowser Delegate
 - (void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didFindService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
 {

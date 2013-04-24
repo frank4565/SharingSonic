@@ -17,5 +17,6 @@
 
 - (id)initWithNone;
 - (void)sendFile:(NSString *)filePath;
+- (void)sendFile:(NSString *)filePath toServices:(NSNetService *)service;
 
 @end

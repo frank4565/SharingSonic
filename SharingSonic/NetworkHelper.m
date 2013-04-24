@@ -68,7 +68,7 @@ static NSString * const pushServerSuffix = @"pushTest/api/api.php";
     [[AFSharingSonicClient sharedClient] enqueueHTTPRequestOperation:operation];
 }
 
-#if TARGET_OS_IPHONE
+//#if TARGET_OS_IPHONE
 
 #pragma mark - Push Notification Helper
 
@@ -134,7 +134,7 @@ static NSString const *POST_KEY_TEXT = @"text";
     [self _postToPushServerWithInfo:messageSettingDic completionBlock:completion];
 }
 
-#endif
+//#endif
 
 #pragma mark - Helper Method
 - (DataType)contentTypeOf:(NSString *)contentTypeHeader

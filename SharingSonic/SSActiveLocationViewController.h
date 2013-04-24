@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SSActiveLocationAnnotation.h"
 
 @interface SSActiveLocationViewController : UIViewController
-
-@property (nonatomic, strong) NSArray *annotations;
 
 @end

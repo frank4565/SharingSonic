@@ -11,16 +11,32 @@
 #import "MD5.h"
 #import "SSBonjour.h"
 #import "SSFile.h"
+#import "OpenUDID.h"
 
 @interface SSStatusBarController () <SSDragStatusViewDelegate>
 @property (nonatomic, strong) NSMutableArray *sonicData;
 @property (nonatomic, assign) Float32 *sampleData;
 // Bonjour
 @property (nonatomic, strong) SSBonjour *bonjour;
+@property (nonatomic, strong, readonly) NSString *openUdid;
 @property (nonatomic, strong) NSURL *lastFileURL;
+@property (nonatomic, strong) NSMutableArray *unsentURLs;
 @end
 
 @implementation SSStatusBarController
+
+- (NSString *)openUdid
+{
+    return [OpenUDID value];
+}
+
+- (NSMutableArray *)unsentURLs
+{
+    if (!_unsentURLs) {
+        _unsentURLs = [[NSMutableArray alloc] init];
+    }
+    return _unsentURLs;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,6 +73,13 @@
     self.bonjour.delegate = self;
     //SSBonjour end
     
+    [NetworkHelper joinPushServerWithUdid:self.openUdid
+                               secretCode:@"TEST"
+                                     name:@"PowerQian's MacBookPro"
+                              deviceToken:@"Mac"
+                        completionHandler:^{
+                            NSLog(@"Mac has joined Push Server");
+                        }];
 }
 
 #pragma mark Lazy initializer
@@ -127,7 +150,9 @@
 
 - (void)didAddNewBonjourService:(NSNetService *)service
 {
-    
+    if (self.lastFileURL) {
+        [self.bonjour sendFile:[self.lastFileURL absoluteString] toServices:service];
+    }
 }
 
 
@@ -230,6 +255,11 @@
         [self.bonjour sendFile:fileURL.path];
     } else {
         self.lastFileURL = fileURL;
+        [NetworkHelper messagePushServerWithUdid:self.openUdid
+                                            text:@"New File From Mac!"
+                               completionHandler:^{
+                                   NSLog(@"Push Notification has sent from Mac!");
+                               }];
     }
     
     // Sharing throught Internet, don't use for now.
