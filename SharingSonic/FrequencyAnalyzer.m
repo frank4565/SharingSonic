@@ -80,18 +80,15 @@ static bool running = true;
 }
 
 
-
-//Singleton
-static id defaultAnalyzer = nil;
-
-+ (void)initialize {
-    if (self == [FrequencyAnalyzer class]) {
-        defaultAnalyzer = [[self alloc] init];
-    }
-}
-
-+ (FrequencyAnalyzer *) defaultAnalyzer {
-    return defaultAnalyzer;
+//Singleton using GCD
++ (FrequencyAnalyzer *) defaultAnalyzer
+{
+    static FrequencyAnalyzer *defaultFrequencyAnalyzer = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        defaultFrequencyAnalyzer = [[self alloc] init];
+    });
+    return defaultFrequencyAnalyzer;
 }
 //Singleton Ended
 
