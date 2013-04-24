@@ -415,7 +415,7 @@
 {
     [self _stopNetworkingAndUpdateUI];
     NSString *hashStringOfData = [[MD5 defaultMD5] md5ForData:data];
-    
+        
     if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
         UIImage *image = [[UIImage alloc] initWithData:data];
         if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
@@ -423,6 +423,7 @@
         } else {
             [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
         }
+        [SSFile saveFileToDocumentsOfName:@"Image.jpg" withData:data];
     } else if (type == kDataTypeText) {
         NSString *receivedText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
@@ -430,6 +431,7 @@
         } else {
             [self _addObject:receivedText toCarousel:self.carousel withHash:hashStringOfData];
         }
+//        [SSFile saveFileToDocumentsOfName:@"Text.txt" withData:data];
     } else {
         NSLog(@"Error occurs!");
     }
@@ -901,6 +903,7 @@
         } else {
             return nil;
         }
+        // cache thumb image.
         ((FXImageView *)view).customEffectsBlock = ^(UIImage *image){
             NSMutableDictionary *obj = [self.ssObjects[index] mutableCopy];
             obj[KEY_FOR_DATA] = image;
