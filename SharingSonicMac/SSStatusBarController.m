@@ -11,15 +11,32 @@
 #import "MD5.h"
 #import "SSBonjour.h"
 #import "SSFile.h"
+#import "OpenUDID.h"
 
 @interface SSStatusBarController () <SSDragStatusViewDelegate>
 @property (nonatomic, strong) NSMutableArray *sonicData;
 @property (nonatomic, assign) Float32 *sampleData;
 // Bonjour
 @property (nonatomic, strong) SSBonjour *bonjour;
+@property (nonatomic, strong, readonly) NSString *openUdid;
+@property (nonatomic, strong) NSURL *lastFileURL;
+@property (nonatomic, strong) NSMutableArray *unsentURLs;
 @end
 
 @implementation SSStatusBarController
+
+- (NSString *)openUdid
+{
+    return [OpenUDID value];
+}
+
+- (NSMutableArray *)unsentURLs
+{
+    if (!_unsentURLs) {
+        _unsentURLs = [[NSMutableArray alloc] init];
+    }
+    return _unsentURLs;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -56,6 +73,13 @@
     self.bonjour.delegate = self;
     //SSBonjour end
     
+    [NetworkHelper joinPushServerWithUdid:self.openUdid
+                               secretCode:@"TEST"
+                                     name:@"PowerQian's MacBookPro"
+                              deviceToken:@"Mac"
+                        completionHandler:^{
+                            NSLog(@"Mac has joined Push Server");
+                        }];
 }
 
 #pragma mark Lazy initializer
@@ -93,21 +117,11 @@
     //    [self _stopNetworkingAndUpdateUI];
     
     if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
-        //        NSSonicData *newImage = [NSSonicData dataWithImage:[UIImage imageWithData:data]
-        //                                                      date:[NSDate dateWithTimeIntervalSinceNow:0]
-        //                                                      type:SonicTypePhoto];
-        //        [self _addObjectToSonicData:newImage];
-//        self.imageView.image = [[NSImage alloc] initWithData:data];
-//        [data writeToFile:[@"~/Downloads/image.jpg" stringByExpandingTildeInPath] atomically:NO];
+        
         [SSFile saveFileToDocumentsOfName:@"image.jpg" withData:data];
         
     } else if (type == kDataTypeText) {
-        //        NSSonicData *newText = [NSSonicData dataWithText:[[NSString alloc] initWithData:data
-        //                                                                               encoding:NSUTF8StringEncoding]
-        //                                                    date:[NSDate dateWithTimeIntervalSinceNow:0]
-        //                                                    type:SonicTypeText];
-        //        [self _addObjectToSonicData:newText];
-//        self.textView.string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        //TODO: Support text
     } else {
         NSLog(@"Error occurs!");
     }
@@ -120,18 +134,27 @@
 
 - (void)failedWithError:(NSError *)error
 {
-    //    [self _stopNetworkingAndUpdateUI];
-    
-    //    if ([error code] == -1004) {
-    //        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error occurs" message:@"Preparetion failed. Check your Network Status." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    //        [errorAlert show];
-    //    } else if ([error code] == -1002) {
-    //        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error occurs" message:@"Server is not ready!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    //        [errorAlert show];
-    //        NSLog(@"%@",error);
-    //    }
+    NSAlert *alert = [NSAlert alertWithError:error];
+    [alert runModal];
+    NSLog(@"%@",error);
+
+//    if ([error code] == -1004) {
+//        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error occurs" message:@"Preparetion failed. Check your Network Status." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        [errorAlert show];
+//    } else if ([error code] == -1002) {
+//        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error occurs" message:@"Server is not ready!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        [errorAlert show];
+//    }
     
 }
+
+- (void)didAddNewBonjourService:(NSNetService *)service
+{
+    if (self.lastFileURL) {
+        [self.bonjour sendFile:[self.lastFileURL absoluteString] toServices:service];
+    }
+}
+
 
 #pragma mark Core Function
 //- (IBAction)addNewText:(id)sender
@@ -231,11 +254,18 @@
     if (self.bonjour.foundServices.count > 0) {
         [self.bonjour sendFile:fileURL.path];
     } else {
-        NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL];        
-        [self _didAddNewFileOfData:data];
+        self.lastFileURL = fileURL;
+        [NetworkHelper messagePushServerWithUdid:self.openUdid
+                                            text:@"New File From Mac!"
+                               completionHandler:^{
+                                   NSLog(@"Push Notification has sent from Mac!");
+                               }];
     }
-       
-    [self _soundShare];
+    
+    // Sharing throught Internet, don't use for now.
+//    NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL];
+//    [self _didAddNewFileOfData:data];
+//    [self _soundShare];
 }
 
 @end

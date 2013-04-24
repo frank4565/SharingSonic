@@ -108,6 +108,9 @@
 		if (![self _isLocalServiceIdentifier:identifier]) {
 			[self.foundServices addObject:service];
             NSLog(@"updateService: %@", service);
+            if ([self.delegate respondsToSelector:@selector(didAddNewBonjourService:)]) {
+                [self.delegate didAddNewBonjourService:service];
+            }
 		} else {
             //            NSLog(@"didnotUpdateServices: %@", service);
         }
@@ -152,6 +155,23 @@
     SSBonjourData *ssData = [[SSBonjourData alloc] initWithFile:filePath];
 	if (ssData.data) {
         [self _sendData:ssData.data];
+    }
+}
+
+- (void)sendFile:(NSString *)filePath toServices:(NSNetService *)service
+{
+    SSBonjourData *ssData = [[SSBonjourData alloc] initWithFile:filePath];
+	if (ssData.data) {
+        [self _sendData:ssData.data];
+        
+        SSBonjourClient *client = [[SSBonjourClient alloc] initWithService:service];
+        client.delegate = self;
+        [client open];
+        
+        NSError *error;
+        [client sendObject:ssData.data error:&error];
+        
+        [self.createdClients addObject:client];
     }
 }
 
