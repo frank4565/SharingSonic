@@ -22,8 +22,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface MainViewController ()
-<SidebarViewControllerDelegate, UIDocumentInteractionControllerDelegate,
-UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+<UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 //@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 @property (weak, nonatomic) IBOutlet UIToolbar *bottomToolbar;
 @property (strong, nonatomic) UIImageView *addButtonImageView;
