@@ -22,7 +22,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface MainViewController ()
-<UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+<UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, TextMessageViewControllerDelegate>
 //@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 @property (weak, nonatomic) IBOutlet UIToolbar *bottomToolbar;
 @property (strong, nonatomic) UIImageView *addButtonImageView;
@@ -1157,22 +1157,25 @@
         }
     } else if ([segue.identifier isEqualToString:INPUT_TEXT_IDENTIFIER]) {
         // Dosen't need TextMessageVC's delegate, because it is implemented by unwind segue.
-//        TextMessageViewController *textMessageVC = (TextMessageViewController *)segue.destinationViewController;
-//        textMessageVC.delegate = self;
-        [self.slidingViewController resetTopView];
+        TextMessageViewController *textMessageVC = (TextMessageViewController *)segue.destinationViewController;
+        textMessageVC.delegate = self;
+//        [self.slidingViewController resetTopView];
     }
 }
 
 #pragma mark TextMessageViewControllerUnwindSegue
-- (IBAction)doneTextInput:(UIStoryboardSegue *)segue
+//- (IBAction)doneTextInput:(UIStoryboardSegue *)segue
+//{
+//    TextMessageViewController *modalTMVC = (TextMessageViewController *)segue.sourceViewController;
+//    NSString *resultText = modalTMVC.textView.text;
+//}
+
+- (void)doneWithTextInput:(NSString *)inputText
 {
-    TextMessageViewController *modalTMVC = (TextMessageViewController *)segue.sourceViewController;
-    NSString *resultText = modalTMVC.textView.text;
-    
-    NSData *dataToSend = [resultText dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *dataToSend = [inputText dataUsingEncoding:NSUTF8StringEncoding];
     self.hashString = [[MD5 defaultMD5] md5ForData:dataToSend];
     
-    [self _replaceObjectAfterAdding:resultText correspondingHash:self.hashString];
+    [self _replaceObjectAfterAdding:inputText correspondingHash:self.hashString];
     
     [self _startNetworkingAndUpdateUI];
     

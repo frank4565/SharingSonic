@@ -48,7 +48,11 @@
 
 
 - (IBAction)done:(UIBarButtonItem *)sender {
+    NSString *textInput = self.textView.text;
     [self.textView resignFirstResponder];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate doneWithTextInput:textInput];
+    }];
 }
 
 - (BOOL)shouldAutorotate

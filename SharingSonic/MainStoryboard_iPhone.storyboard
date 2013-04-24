@@ -146,7 +146,6 @@
                                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="bkp-iw-1sK">
                                             <connections>
                                                 <action selector="done:" destination="mAa-tM-1U1" id="dbW-rm-GKn"/>
-                                                <segue destination="2hh-up-bKz" kind="unwind" unwindAction="doneTextInput:" id="V1Z-Hl-at8"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -169,7 +168,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5yR-TI-X7Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="2hh-up-bKz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1788" y="-642"/>
         </scene>
@@ -467,7 +465,6 @@
                             <constraint firstItem="oJ1-ef-s9H" firstAttribute="top" secondItem="0kB-RR-BY2" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="84B-wA-hQP"/>
                             <constraint firstItem="aoj-pK-iJr" firstAttribute="leading" secondItem="Qm2-UG-wKh" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="9k9-O6-djY"/>
                             <constraint firstItem="oJ1-ef-s9H" firstAttribute="top" secondItem="aoj-pK-iJr" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="AzP-iz-zX5"/>
-                            <constraint firstItem="aoj-pK-iJr" firstAttribute="baseline" secondItem="7JQ-ZS-W5O" secondAttribute="baseline" type="default" id="HHN-Yv-aRS"/>
                             <constraint firstItem="oJ1-ef-s9H" firstAttribute="trailing" secondItem="Qm2-UG-wKh" secondAttribute="trailing" type="default" id="Sv7-S0-ueK"/>
                             <constraint firstItem="7JQ-ZS-W5O" firstAttribute="leading" secondItem="qW4-H8-siG" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="XZa-SV-9a6"/>
                             <constraint firstItem="0kB-RR-BY2" firstAttribute="top" secondItem="Qm2-UG-wKh" secondAttribute="top" type="default" id="eRi-Zx-5oN"/>
@@ -611,70 +608,6 @@
         <image name="Tick.png" width="26" height="26"/>
         <image name="User.png" width="26" height="26"/>
     </resources>
-    <classes>
-        <class className="ImageViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImageViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="MainViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="bottomToolbar" candidateClass="UIToolbar"/>
-                <relationship kind="outlet" name="carousel" candidateClass="iCarousel"/>
-                <relationship kind="outlet" name="openinButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
-                <relationship kind="outlet" name="sendButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="waveform" candidateClass="WaveView"/>
-            </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="SSActiveLocationViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SSActiveLocationViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="addLocationBarButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="locationTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-                <relationship kind="outletCollection" name="addLocationControlSet"/>
-            </relationships>
-        </class>
-        <class className="SSImageViewController" superclassName="ImageViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SSImageViewController.h"/>
-        </class>
-        <class className="SidebarViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SidebarViewController.h"/>
-        </class>
-        <class className="TestPushViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TestPushViewController.h"/>
-        </class>
-        <class className="TextMessageViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TextMessageViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="textView" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-        <class className="UIButtonWithLargerTapArea" superclassName="UIButton">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UIButtonWithLargerTapArea.h"/>
-        </class>
-        <class className="WaveView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/WaveView.h"/>
-            <relationships>
-                <relationship kind="outlet" name="dataSource"/>
-            </relationships>
-        </class>
-        <class className="iCarousel" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/iCarousel.h"/>
-            <relationships>
-                <relationship kind="outlet" name="dataSource"/>
-                <relationship kind="outlet" name="delegate"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
