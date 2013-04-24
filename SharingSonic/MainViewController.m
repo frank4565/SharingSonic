@@ -917,7 +917,7 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     self.hashString = self.ssObjects[index][KEY_FOR_HASH];
     
-    if (self.carousel.currentItemIndex == index) {
+    if (self.carousel.currentItemIndex == index && self.hashString) {
         NSString *path = [SSFile filePathOf:self.files.fileArray[index]];
         NSLog(@"Path String: %@, URL: %@",path, [NSURL fileURLWithPath:path isDirectory:NO]);
         self.imageURLToBeShownInFullScreen = [NSURL fileURLWithPath:path isDirectory:NO];
