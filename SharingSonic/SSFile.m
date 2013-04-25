@@ -24,10 +24,22 @@
 {
     return [ssfile valueForKey:kFilePath];
 }
- 
+
++ (NSString *)thumbPathOf:(NSDictionary *)ssfile
+{
+    return [[self class] thumbImagePath:[[self class] fileHashStringOf:ssfile]];
+}
+
 + (NSData *)fileDataOf:(NSDictionary *)ssfile
 {
-    return [[NSFileManager defaultManager] contentsAtPath:[[self class] filePathOf:ssfile]];
+    NSString *filePath;
+    if ([[self class] hasThumbImage:ssfile]) {
+        NSLog(@"Has thumb image");
+        filePath = [[self class] thumbPathOf:ssfile];
+    } else {
+        filePath = [[self class] filePathOf:ssfile];
+    }
+    return [[NSFileManager defaultManager] contentsAtPath:filePath];
 }
 
 + (NSString *)fileHashStringOf:(NSDictionary *)ssfile
@@ -56,6 +68,11 @@
     }
     // other types remain to support.
     return kDataTypeUnsupported;
+}
+
++ (BOOL)hasThumbImage:(NSDictionary *)ssfile
+{    
+    return [[NSFileManager defaultManager] fileExistsAtPath:[[self class] thumbPathOf:ssfile]];
 }
 
 NSString * const kFilePath = @"SSKEY_FILE_PATH";
@@ -115,6 +132,55 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
     
     [[NSUserDefaults standardUserDefaults] setObject:files forKey:kFileList];
     return [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (void)saveThumbImage:(UIImage *)thumbImage ofHash:(NSString *)hashString
+{ 
+    NSData *data = UIImagePNGRepresentation(thumbImage);
+    
+    NSString *thumbImagePath = [[self class] thumbImagePath:hashString];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:thumbImagePath]) {
+        NSLog(@"Save thumb image %@ of %@", [[NSFileManager defaultManager] createFileAtPath:thumbImagePath
+                                                                                    contents:data
+                                                                                  attributes:nil]
+              ? @"YES" : @"NO", hashString);
+    }
+
+}
+
++ (BOOL)createThumbDirectory
+{
+    return [[NSFileManager defaultManager] createDirectoryAtPath:[[self class] thumbDirectoryPath] withIntermediateDirectories:YES attributes:nil error:nil];
+}
+
++ (BOOL)hasThumbDirectory
+{
+    return [[NSFileManager defaultManager] fileExistsAtPath:[[self class] thumbDirectoryPath]];
+}
+
++ (NSString *)thumbDirectoryPath
+{
+#if TARGET_IPHONE_SIMULATOR
+    NSString *dirPath = [NSString stringWithFormat:@"%@/thumbs", [NSString documentsPath]];
+#elif TARGET_OS_IPHONE
+    NSString *dirPath = [NSString stringWithFormat:@"%@/thumbs", [NSString documentsPath]];
+#else
+    return nil;
+#endif
+    return dirPath;
+}
+
++ (NSString *)thumbImagePath:(NSString *)hashString
+{
+#if TARGET_IPHONE_SIMULATOR
+    NSString *filePath = [NSString stringWithFormat:@"%@/thumbs/%@.png", [NSString documentsPath], hashString];
+#elif TARGET_OS_IPHONE
+    NSString *filePath = [NSString stringWithFormat:@"%@/thumbs/%@.png", [NSString documentsPath], hashString];
+#else
+    return nil;
+#endif
+    return filePath;
 }
 
 @end

@@ -21,9 +21,17 @@
 
 + (DataType)fileDataTypeOf:(NSDictionary *)ssfile;
 
++ (BOOL)hasThumbImage:(NSDictionary *)ssfile;
+
++ (BOOL)createThumbDirectory;
+
++ (BOOL)hasThumbDirectory;
+
 + (BOOL)saveFileInfoOfPath:(NSString *)path withHashString:(NSString *)hashString;
 
 + (NSString *)saveFileToDocumentsOfName:(NSString *)fileName
                                withData:(NSData *)payloadData;
+
++ (void)saveThumbImage:(UIImage *)thumbImage ofHash:(NSString *)hashString;
 
 @end
