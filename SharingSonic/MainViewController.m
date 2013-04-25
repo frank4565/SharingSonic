@@ -53,9 +53,11 @@
 //Must add this synthesize
 @synthesize ssObjects = _ssObjects;
 
-#define KEY_FOR_TYPE @"Type"
-#define KEY_FOR_DATA @"Data"
-#define KEY_FOR_HASH @"Hash"
+NSString * const KEY_FOR_TYPE = @"Type";
+NSString * const KEY_FOR_DATA = @"Data";
+NSString * const KEY_FOR_HASH = @"Hash";
+NSString * const KEY_FOR_THUM = @"Thumb";
+
 
 #pragma mark Lazy initializer
 
@@ -83,7 +85,7 @@
         NSArray *fileArray = self.files.fileArray;
         _ssObjects = [[NSMutableArray alloc] initWithCapacity:fileArray.count];
         for (NSDictionary *file in fileArray) {
-            NSDictionary *newObj = @{KEY_FOR_TYPE: @([SSFile fileDataTypeOf:file]), KEY_FOR_DATA: [SSFile fileDataOf:file], KEY_FOR_HASH: [SSFile fileHashStringOf:file]};
+            NSDictionary *newObj = @{KEY_FOR_TYPE: @([SSFile fileDataTypeOf:file]), KEY_FOR_DATA: [SSFile fileDataOf:file], KEY_FOR_HASH: [SSFile fileHashStringOf:file], KEY_FOR_THUM: [SSFile hasThumbImage:file] ? @"YES" : @"NO"};
             [_ssObjects addObject:newObj];
         }
         [self.carousel reloadData];
@@ -97,7 +99,7 @@
     [self.carousel reloadData];
 }
 
-#pragma mark - Private Methods of CollectionView Related
+//#pragma mark - Private Methods of CollectionView Related
 
 //- (void)_addObjectToSonicData:(NSSonicData *)object
 //{
@@ -224,7 +226,7 @@
     DataType type;
     if ([object isKindOfClass:[UIImage class]]) {
         type = kDataTypeImageJPEG;
-        newObj = @{KEY_FOR_TYPE: @(type), KEY_FOR_DATA: UIImageJPEGRepresentation(object, 1), KEY_FOR_HASH: hash};
+        newObj = @{KEY_FOR_TYPE: @(type), KEY_FOR_DATA: UIImageJPEGRepresentation(object, 1), KEY_FOR_HASH: hash, KEY_FOR_THUM: @"NO"};
     } else if ([object isKindOfClass:[NSString class]]) {
         type = kDataTypeText;
         newObj = @{KEY_FOR_TYPE: @(type), KEY_FOR_DATA: object, KEY_FOR_HASH: hash};
@@ -885,7 +887,7 @@
     //you'll get weird issues with carousel item content appearing
     //in the wrong place in the carousel
     
-    if (type == kDataTypeImageJPEG) {
+    if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
 //        imageView.image = nil;
 //        imageView.image = noImage;
 //        dispatch_queue_t imageQueue = dispatch_queue_create("Image Queue", NULL);
@@ -903,13 +905,19 @@
         } else {
             return nil;
         }
-        // cache thumb image.
-        ((FXImageView *)view).customEffectsBlock = ^(UIImage *image){
-            NSMutableDictionary *obj = [self.ssObjects[index] mutableCopy];
-            obj[KEY_FOR_DATA] = image;
-            self.ssObjects[index] = [obj copy];
-            return image;
-        };
+        if ([self.ssObjects[index][KEY_FOR_THUM] isEqualToString:@"NO"]) {
+            // cache thumb image.
+            ((FXImageView *)view).customEffectsBlock = ^(UIImage *image){
+                NSLog(@"index = %d", index);
+                NSMutableDictionary *obj = [self.ssObjects[index] mutableCopy];
+                obj[KEY_FOR_DATA] = image;
+                obj[KEY_FOR_THUM] = @"YES";
+                self.ssObjects[index] = [obj copy];
+                // save thumb image to disk.
+                [SSFile saveThumbImage:image ofHash:obj[KEY_FOR_HASH]];
+                return image;
+            };
+        }
     } else if (type == kDataTypeText) {
         textView.text = content;
     } else if (type == kDataTypeUnsupported) {
@@ -1000,7 +1008,7 @@
             [self.bonjour sendFile:picturePath];
         } // else {
         // Upload picture whenever there is bonjour service found or not.
-        [[NetworkHelper helper] uploadData:pictureData contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
+//        [[NetworkHelper helper] uploadData:pictureData contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
 //        }
         [self _replaceObjectAfterAdding:image correspondingHash:self.hashString];
     }];

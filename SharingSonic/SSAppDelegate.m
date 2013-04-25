@@ -8,6 +8,7 @@
 
 #import "SSAppDelegate.h"
 #import "PushNotificationSettings.h"
+#import "SSFile.h"
 
 @implementation SSAppDelegate
 
@@ -18,6 +19,10 @@
     // Let the device know we want to receive push notifications
 	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    
+    if (![SSFile hasThumbDirectory]) {
+        [SSFile createThumbDirectory];
+    }
     
     return YES;
 }
