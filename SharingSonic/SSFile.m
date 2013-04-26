@@ -25,6 +25,16 @@
     return [ssfile valueForKey:kFilePath];
 }
 
+- (NSString *)filePathOfHash:(NSString *)hash
+{
+    for (NSDictionary *dic in self.fileArray) {
+        if ([dic[kHashString] isEqualToString:hash]) {
+            return dic[kFilePath];
+        }
+    }
+    return nil;
+}
+
 + (NSString *)thumbPathOf:(NSDictionary *)ssfile
 {
     return [[self class] thumbImagePath:[[self class] fileHashStringOf:ssfile]];

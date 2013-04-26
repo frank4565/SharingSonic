@@ -398,8 +398,8 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     NSUInteger indexOfCenteredItem = self.carousel.currentItemIndex;
     
     if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-        NSLog(@"Open In...");
-        //TODO: Open in
+        [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:[self.files filePathOfHash:self.ssObjects[indexOfCenteredItem][KEY_FOR_HASH]]]];
+        [self.docInteractionController presentOptionsMenuFromRect:self.view.bounds inView:self.view animated:YES];
     } else if (buttonIndex == actionSheet.destructiveButtonIndex) {
         //TODO: Delete current item.
     }
@@ -526,7 +526,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
         NSLog(@"Other types!");
     }
 
-    [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
+//    [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
 }
 
 - (void)setupDocumentControllerWithURL:(NSURL *)url
