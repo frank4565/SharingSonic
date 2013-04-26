@@ -905,19 +905,18 @@ NSString * const KEY_FOR_THUM = @"Thumb";
         } else {
             return nil;
         }
-        if ([self.ssObjects[index][KEY_FOR_THUM] isEqualToString:@"NO"]) {
-            // cache thumb image.
-            ((FXImageView *)view).customEffectsBlock = ^(UIImage *image){
-                NSLog(@"index = %d", index);
+        // cache thumb image.
+        ((FXImageView *)view).customEffectsBlock = ^(UIImage *image){
+            if ([self.ssObjects[index][KEY_FOR_THUM] isEqualToString:@"NO"]) {
                 NSMutableDictionary *obj = [self.ssObjects[index] mutableCopy];
                 obj[KEY_FOR_DATA] = image;
                 obj[KEY_FOR_THUM] = @"YES";
                 self.ssObjects[index] = [obj copy];
                 // save thumb image to disk.
                 [SSFile saveThumbImage:image ofHash:obj[KEY_FOR_HASH]];
-                return image;
-            };
-        }
+            }
+            return image;
+        };
     } else if (type == kDataTypeText) {
         textView.text = content;
     } else if (type == kDataTypeUnsupported) {
