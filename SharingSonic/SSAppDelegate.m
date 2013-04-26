@@ -12,6 +12,10 @@
 
 @implementation SSAppDelegate
 
+static NSString const * HAS_SET_SWITCH = @"Has set switch";
+static NSString const *BONJOUR_SWITCH_VALUE = @"Bonjour switch value";
+static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
@@ -22,6 +26,13 @@
     
     if (![SSFile hasThumbDirectory]) {
         [SSFile createThumbDirectory];
+    }
+    
+    // Initialize the value of the switch in setting.
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:(NSString *)HAS_SET_SWITCH]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:(NSString *)BONJOUR_SWITCH_VALUE];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:(NSString *)INTERNET_SWITCH_VALUE];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:(NSString *)HAS_SET_SWITCH];
     }
     
     return YES;

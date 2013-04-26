@@ -23,22 +23,15 @@
 
 @interface MainViewController ()
 <UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, TextMessageViewControllerDelegate>
-//@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 @property (weak, nonatomic) IBOutlet UIToolbar *bottomToolbar;
 @property (strong, nonatomic) UIImageView *addButtonImageView;
 @property (nonatomic) BOOL isAdding;
-//TableView Property
-//@property (weak, nonatomic) IBOutlet SonicTableView *sonicTable;
-//@property (strong, nonatomic) NSMutableArray *sonicData;
 
-//Views of this controller
-//@property (weak, nonatomic) IBOutlet UIView *contentView;
-//@property (weak, nonatomic) IBOutlet UITextView *contentTextView;
-//@property (weak, nonatomic) IBOutlet UIImageView *contentImageView;
-//@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 //Other property of this controller
 @property (strong, nonatomic) NSIndexPath *selectedIndexPath;
-@property (strong,nonatomic) NSURL *imageURLToBeShownInFullScreen;
+@property (strong, nonatomic) NSURL *imageURLToBeShownInFullScreen;
+@property (nonatomic, readonly) BOOL bonjourIsOn;
+@property (nonatomic, readonly) BOOL internetIsOn;
 //Sound Property
 @property (nonatomic) Float32 *sampleData;
 @property (nonatomic) BOOL hasSample;
@@ -59,7 +52,7 @@ NSString * const KEY_FOR_HASH = @"Hash";
 NSString * const KEY_FOR_THUM = @"Thumb";
 
 
-#pragma mark Lazy initializer
+#pragma mark Lazy initializer & setter and getter
 
 - (void)setHashString:(NSString *)hashString
 {
@@ -97,6 +90,19 @@ NSString * const KEY_FOR_THUM = @"Thumb";
 {
     _ssObjects = ssObjects;
     [self.carousel reloadData];
+}
+
+static NSString const *BONJOUR_SWITCH_VALUE = @"Bonjour switch value";
+static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
+
+- (BOOL)bonjourIsOn
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:(NSString *)BONJOUR_SWITCH_VALUE];
+}
+
+- (BOOL)internetIsOn
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:(NSString *)INTERNET_SWITCH_VALUE];
 }
 
 //#pragma mark - Private Methods of CollectionView Related
@@ -217,7 +223,15 @@ NSString * const KEY_FOR_THUM = @"Thumb";
 //    }
 //}
 
-#pragma mark - Carousel Related Private Method
+#pragma mark -
+#pragma mark Private Helper Method
+
+- (void)_uploadData:(NSData *)data type:(DataType)type
+{
+    
+}
+
+#pragma mark Carousel Related Private Method
 #define FIRST_OBJECT 0
 
 - (void)_replaceObjectAfterAdding:(id)object correspondingHash:(NSString *)hash
@@ -1003,12 +1017,14 @@ NSString * const KEY_FOR_THUM = @"Thumb";
     [picker dismissViewControllerAnimated:YES completion:^{
         [self _startNetworkingAndUpdateUI];
         self.hashString = [[MD5 defaultMD5] md5ForData:pictureData];
-        if (self.bonjour.foundServices.count > 0) {
+        
+        if (self.bonjourIsOn && self.bonjour.foundServices.count > 0) {
             [self.bonjour sendFile:picturePath];
-        } // else {
-        // Upload picture whenever there is bonjour service found or not.
-//        [[NetworkHelper helper] uploadData:pictureData contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
-//        }
+        }
+        
+        if (self.internetIsOn) {
+            [[NetworkHelper helper] uploadData:pictureData contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
+        }
         [self _replaceObjectAfterAdding:image correspondingHash:self.hashString];
     }];
 }
@@ -1186,9 +1202,11 @@ NSString * const KEY_FOR_THUM = @"Thumb";
     
     [self _startNetworkingAndUpdateUI];
     
-    if (self.bonjour.foundServices.count > 0) {
-        //        [self.bonjour sendData:dataToSend];
-    } else {
+    if (self.bonjourIsOn && self.bonjour.foundServices.count > 0) {
+        //TODO: send text through bonjour
+    }
+    
+    if (self.internetIsOn) {
         [[NetworkHelper helper] uploadData:dataToSend contentType:kDataTypeText WithHashString:self.hashString delegate:self];
     }
 }

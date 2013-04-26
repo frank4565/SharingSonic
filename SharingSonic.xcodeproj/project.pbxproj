@@ -133,6 +133,7 @@
 		1E9842321716967900692C86 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E9842311716967800692C86 /* Cocoa.framework */; };
 		1EADC3091716F92E0074E2A1 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E9841A017168B9000692C86 /* OpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AA33A7091722AE060047FF33 /* CLLocationParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AA33A7081722AE060047FF33 /* CLLocationParser.m */; };
+		AA751D01172A9E1A00131965 /* SSSettingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA751D00172A9E1A00131965 /* SSSettingTableViewController.m */; };
 		AA8814741717F68E00FCAD92 /* SSActiveLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8814731717F68E00FCAD92 /* SSActiveLocationViewController.m */; };
 		AA8814761717FDEB00FCAD92 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA8814751717FDEB00FCAD92 /* MapKit.framework */; };
 		AA88147917186A4800FCAD92 /* SSActiveLocationAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = AA88147817186A4800FCAD92 /* SSActiveLocationAnnotation.m */; };
@@ -309,6 +310,8 @@
 		9A0BD9E2EC104D5ABDE71E73 /* Pods-SharingSonicMac.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharingSonicMac.xcconfig"; path = "Pods/Pods-SharingSonicMac.xcconfig"; sourceTree = SOURCE_ROOT; };
 		AA33A7071722AE060047FF33 /* CLLocationParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLLocationParser.h; sourceTree = "<group>"; };
 		AA33A7081722AE060047FF33 /* CLLocationParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLLocationParser.m; sourceTree = "<group>"; };
+		AA751CFF172A9E1A00131965 /* SSSettingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingTableViewController.h; sourceTree = "<group>"; };
+		AA751D00172A9E1A00131965 /* SSSettingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingTableViewController.m; sourceTree = "<group>"; };
 		AA8814721717F68E00FCAD92 /* SSActiveLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSActiveLocationViewController.h; sourceTree = "<group>"; };
 		AA8814731717F68E00FCAD92 /* SSActiveLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSActiveLocationViewController.m; sourceTree = "<group>"; };
 		AA8814751717FDEB00FCAD92 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -582,6 +585,8 @@
 				1E98417417168AEF00692C86 /* MainViewController.m */,
 				1E98417517168AEF00692C86 /* TestPushViewController.h */,
 				1E98417617168AEF00692C86 /* TestPushViewController.m */,
+				AA751CFF172A9E1A00131965 /* SSSettingTableViewController.h */,
+				AA751D00172A9E1A00131965 /* SSSettingTableViewController.m */,
 				AA8814721717F68E00FCAD92 /* SSActiveLocationViewController.h */,
 				AA8814731717F68E00FCAD92 /* SSActiveLocationViewController.m */,
 				1E98417917168AF800692C86 /* InitialSlidingViewController.h */,
@@ -1029,6 +1034,7 @@
 				AA8814741717F68E00FCAD92 /* SSActiveLocationViewController.m in Sources */,
 				AA88147917186A4800FCAD92 /* SSActiveLocationAnnotation.m in Sources */,
 				AA33A7091722AE060047FF33 /* CLLocationParser.m in Sources */,
+				AA751D01172A9E1A00131965 /* SSSettingTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
