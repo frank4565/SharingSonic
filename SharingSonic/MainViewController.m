@@ -394,9 +394,9 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-//    if (buttonIndex == actionSheet.cancelButtonIndex) {
-//        [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:YES];
-//    } else
+    // item to use.
+    NSUInteger indexOfCenteredItem = self.carousel.currentItemIndex;
+    
     if (buttonIndex == actionSheet.firstOtherButtonIndex) {
         NSLog(@"Open In...");
         //TODO: Open in
