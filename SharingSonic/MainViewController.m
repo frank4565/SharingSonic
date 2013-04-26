@@ -268,7 +268,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     
     if ([object isKindOfClass:[UIImage class]]) {
         UIImage *image = (UIImage *)object;
-        [self.ssObjects addObject:@{KEY_FOR_TYPE: @(kDataTypeImageJPEG), KEY_FOR_DATA:UIImageJPEGRepresentation(image, 1), KEY_FOR_HASH:hash}];
+        [self.ssObjects addObject:@{KEY_FOR_TYPE: @(kDataTypeImageJPEG), KEY_FOR_DATA:image, KEY_FOR_HASH:hash}];
     } else if ([object isKindOfClass:[NSString class]]) {
         NSString *text = (NSString *)object;
         [self.ssObjects addObject:@{KEY_FOR_TYPE: @(kDataTypeText), KEY_FOR_DATA:text, KEY_FOR_HASH:hash}];
@@ -461,7 +461,6 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
         } else {
             [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
         }
-        [SSFile saveFileToDocumentsOfName:@"Image.jpg" withData:data];
     } else if (type == kDataTypeText) {
         NSString *receivedText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
@@ -477,14 +476,57 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 
 - (void)downloadDidFinishWithFile:(NSString *)filePath
 {
+    [self _stopNetworkingAndUpdateUI];
+    
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    NSString *hashStringOfData = [[MD5 defaultMD5] md5ForData:data];
+    
     if ([(NSString *)filePath.pathComponents.lastObject isImageFileName]) {
-        [self downloadDidFinishWithData:[NSData dataWithContentsOfFile:filePath] contentType:kDataTypeImageJPEG];
-        [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
+        UIImage *image = [[UIImage alloc] initWithData:data];
+        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+            [self _replaceObjectAfterAdding:image correspondingHash:hashStringOfData];
+        } else {
+            [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
+        }
+    } /*else if (type == kDataTypeText) {
+//        NSString *receivedText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+//            [self _replaceObjectAfterAdding:receivedText correspondingHash:hashStringOfData];
+//        } else {
+//            [self _addObject:receivedText toCarousel:self.carousel withHash:hashStringOfData];
+//        }
+        //        [SSFile saveFileToDocumentsOfName:@"Text.txt" withData:data];
     } else {
-        // Other file type
-//        [self downloadDidFinishWithData:[NSData dataWithContentsOfFile:filePath] contentType:kDataTypeImageJPEG];
-        [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
+        NSLog(@"Error occurs!");
+    }*/
+    [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
+}
+
+- (void)downloadDidFinishWithData:(NSData *)data ofFile:(NSString *)filePath
+{
+    [self _stopNetworkingAndUpdateUI];
+    
+    NSString *hash = [[MD5 defaultMD5] md5ForData:data];
+    
+    if ([(NSString *)filePath.pathComponents.lastObject isImageFileName]) {
+        UIImage *image = [[UIImage alloc] initWithData:data];
+        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+            [self _replaceObjectAfterAdding:image correspondingHash:hash];
+        } else {
+            [self _addObject:image toCarousel:self.carousel withHash:hash];
+        }
+    } else if ([(NSString *)filePath.pathComponents.lastObject isTextFileName]) {
+        NSString *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+            [self _replaceObjectAfterAdding:text correspondingHash:hash];
+        } else {
+            [self _addObject:text toCarousel:self.carousel withHash:hash];
+        }
+    } else {
+        NSLog(@"Other types!");
     }
+
+    [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
 }
 
 - (void)setupDocumentControllerWithURL:(NSURL *)url

@@ -32,6 +32,8 @@
 + (NSString *)saveFileToDocumentsOfName:(NSString *)fileName
                                withData:(NSData *)payloadData;
 
+#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 + (void)saveThumbImage:(UIImage *)thumbImage ofHash:(NSString *)hashString;
+#endif
 
 @end

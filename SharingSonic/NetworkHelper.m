@@ -10,6 +10,7 @@
 #import "ServerBaseURL.h"
 #import "AFSharingSonicClient.h"
 #import "AFHTTPRequestOperation.h"
+#import "SSFile.h"
 
 static NSString *constBoundry = @"0xKhTmLbOuNdArY";
 static NSString * const pushServerSuffix = @"pushTest/api/api.php";
@@ -30,7 +31,16 @@ static NSString * const pushServerSuffix = @"pushTest/api/api.php";
     
     NSURLRequest *request = [[AFSharingSonicClient sharedClient] requestWithMethod:@"POST" path:@"query.php" parameters:@{ @"hash" : hashString } ];
     AFHTTPRequestOperation *operation = [[AFSharingSonicClient sharedClient] HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        [self.delegate downloadDidFinishWithData:(NSData *)responseObject contentType:[self contentTypeOf:operation.response.MIMEType]];
+        DataType type = [self contentTypeOf:operation.response.MIMEType];
+        NSString *file;
+        if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
+            file = @"Image.jpg";
+        } else if (type == kDataTypeText) {
+            file = @"Text.txt";
+        }
+        file = [SSFile saveFileToDocumentsOfName:file withData:(NSData *)responseObject];
+//        [self.delegate downloadDidFinishWithData:(NSData *)responseObject contentType:type];
+        [self.delegate downloadDidFinishWithData:(NSData *)responseObject ofFile:file];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [self.delegate failedWithError:error];
     }];

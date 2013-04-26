@@ -81,9 +81,7 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
 
 + (NSString *)saveFileToDocumentsOfName:(NSString *)fileName withData:(NSData *)payloadData
 {
-#if TARGET_IPHONE_SIMULATOR
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@", [NSString documentsPath], fileName];
-#elif TARGET_OS_IPHONE
+#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     NSString *filePath = [NSString stringWithFormat:@"%@/%@", [NSString documentsPath], fileName];
 #else
     NSString *filePath = [NSString stringWithFormat:@"%@/%@", [NSString downloadsPath], fileName];
@@ -134,6 +132,7 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
     return [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 + (void)saveThumbImage:(UIImage *)thumbImage ofHash:(NSString *)hashString
 { 
     NSData *data = UIImagePNGRepresentation(thumbImage);
@@ -148,6 +147,7 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
     }
 
 }
+#endif
 
 + (BOOL)createThumbDirectory
 {
@@ -161,26 +161,22 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
 
 + (NSString *)thumbDirectoryPath
 {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     NSString *dirPath = [NSString stringWithFormat:@"%@/thumbs", [NSString documentsPath]];
-#elif TARGET_OS_IPHONE
-    NSString *dirPath = [NSString stringWithFormat:@"%@/thumbs", [NSString documentsPath]];
+    return dirPath;
 #else
     return nil;
 #endif
-    return dirPath;
 }
 
 + (NSString *)thumbImagePath:(NSString *)hashString
 {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     NSString *filePath = [NSString stringWithFormat:@"%@/thumbs/%@.png", [NSString documentsPath], hashString];
-#elif TARGET_OS_IPHONE
-    NSString *filePath = [NSString stringWithFormat:@"%@/thumbs/%@.png", [NSString documentsPath], hashString];
+    return filePath;
 #else
     return nil;
 #endif
-    return filePath;
 }
 
 @end

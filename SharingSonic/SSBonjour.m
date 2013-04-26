@@ -223,7 +223,9 @@
     SSBonjourData *receivedSSData = [[SSBonjourData alloc] initWithData:(NSData *)object];
     
 //    [self.delegate downloadDidFinishWithData:object contentType:kDataTypeImageJPEG];
-    [self.delegate downloadDidFinishWithFile:receivedSSData.filePath];
+    // TODO send data instead of filepath.
+//    [self.delegate downloadDidFinishWithFile:receivedSSData.filePath];
+    [self.delegate downloadDidFinishWithData:receivedSSData.data ofFile:receivedSSData.filePath];
 }
 
 #pragma mark - DTBonjourConnection Delegate (Client)

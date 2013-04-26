@@ -75,6 +75,11 @@
  */
 - (BOOL)isHTMLFileName;
 
+/**
+ @Returns `YES` if the receiver is an text file name
+ */
+- (BOOL)isTextFileName;
+
 /**-------------------------------------------------------------------------------------
  @name Working with Identifiers
  ---------------------------------------------------------------------------------------

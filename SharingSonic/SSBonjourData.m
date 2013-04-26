@@ -85,6 +85,7 @@
 	NSInteger indexAfterHeader = NSMaxRange(self.rangeOfHeader);
 	NSRange payloadRange = NSMakeRange(indexAfterHeader, self.fileLength);
 	NSData *payloadData = [self.data subdataWithRange:payloadRange];
+    self.data = payloadData;
 	
 	return [SSFile saveFileToDocumentsOfName:self.fileName withData:payloadData];
 }
