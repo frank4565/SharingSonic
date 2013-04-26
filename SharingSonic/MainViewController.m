@@ -22,7 +22,8 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface MainViewController ()
-<UIDocumentInteractionControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, TextMessageViewControllerDelegate>
+<UIDocumentInteractionControllerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate,
+TextMessageViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIToolbar *bottomToolbar;
 @property (strong, nonatomic) UIImageView *addButtonImageView;
 @property (nonatomic) BOOL isAdding;
@@ -381,6 +382,27 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     Only supoort iOS recognizable file
     */
     // [self.docInteractionController presentPreviewAnimated:YES];
+}
+
+- (IBAction)moreAction:(UIBarButtonItem *)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"To Do" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:@"Open In...", nil];
+    actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    [actionSheet showFromBarButtonItem:sender animated:YES];
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+//    if (buttonIndex == actionSheet.cancelButtonIndex) {
+//        [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:YES];
+//    } else
+    if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+        NSLog(@"Open In...");
+        //TODO: Open in
+    } else if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        //TODO: Delete current item.
+    }
 }
 
 #pragma mark - Updating UI
