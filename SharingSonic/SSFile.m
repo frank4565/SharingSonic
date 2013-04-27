@@ -142,6 +142,45 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
     return [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
++ (BOOL)deleteFileOfIndex:(NSUInteger)index
+{
+    NSArray *files = [[NSUserDefaults standardUserDefaults] arrayForKey:kFileList];
+    if (!files) {
+        NSLog(@"No file array");
+        return NO;
+    }
+    NSDictionary *fileDic = files[index];
+    if (!fileDic) {
+        NSLog(@"No file at index:%lu",(unsigned long)index);
+        return NO;
+    }
+    NSError *deletionError;
+    
+    //Delete file
+    NSString *filePath = [[self class] filePathOf:fileDic];
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:&deletionError];
+    if (deletionError != nil) {
+        NSLog(@"File deletion failed, error:%@", deletionError);
+        return NO;
+    }
+    
+    //Delete thumbnail
+    NSString *fileHashString = [[self class] fileHashStringOf:fileDic];
+    NSString *thumbPath = [[self class] thumbImagePath:fileHashString];
+    [[NSFileManager defaultManager] removeItemAtPath:thumbPath error:&deletionError];
+    if (deletionError != nil) {
+        NSLog(@"Thumbnail deletion failed, error:%@", deletionError);
+        return NO;
+    }
+    
+    //Delete array and NSUserDefaults
+    NSMutableArray *fileArrayToModify = [files mutableCopy];
+    [fileArrayToModify removeObjectAtIndex:index];
+    [[NSUserDefaults standardUserDefaults] setObject:fileArrayToModify forKey:kFileList];
+    
+    return YES;
+}
+
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 + (void)saveThumbImage:(UIImage *)thumbImage ofHash:(NSString *)hashString
 { 
