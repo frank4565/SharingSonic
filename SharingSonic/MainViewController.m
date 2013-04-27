@@ -235,29 +235,68 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 #pragma mark Carousel Related Private Method
 #define FIRST_OBJECT 0
 
-- (void)_replaceObjectAfterAdding:(id)object correspondingHash:(NSString *)hash
+- (DataType)dataTypeOfFile:(NSString *)filePath
 {
-    NSDictionary *newObj;
     DataType type;
-    if ([object isKindOfClass:[UIImage class]]) {
+    
+    if ([filePath isPNGFileName]) {
+        type = kDataTypeImagePNG;
+    } else if ([filePath isImageFileName]) {
         type = kDataTypeImageJPEG;
-        newObj = @{KEY_FOR_TYPE: @(type), KEY_FOR_DATA: UIImageJPEGRepresentation(object, 1), KEY_FOR_HASH: hash, KEY_FOR_THUM: @"NO"};
-    } else if ([object isKindOfClass:[NSString class]]) {
+    } else if ([filePath isTextFileName]) {
         type = kDataTypeText;
-        newObj = @{KEY_FOR_TYPE: @(type), KEY_FOR_DATA: object, KEY_FOR_HASH: hash};
     } else {
-        NSLog(@"Error in - (void)_replaceObjectAfterAdding:(id)object correspondingHash:(NSString *)hash");
+        type = kDataTypeUnsupported;
     }
     
+    return type;
+}
+
+- (NSDictionary *)_objFrom:(id)object withHash:(NSString *)hash ofFile:(NSString *)filePath
+{
+    DataType type;
     
-    [self.ssObjects replaceObjectAtIndex:[self.ssObjects count] - 1 withObject:newObj];
+    if ([object isKindOfClass:[NSData class]]) {
+        type = [self dataTypeOfFile:filePath];
+    } else if ([object isKindOfClass:[UIImage class]]) {
+        type = kDataTypeImageJPEG;
+    } else if ([object isKindOfClass:[NSString class]]) {
+        type = kDataTypeText;
+    } else if ([object isKindOfClass:[NSNull class]]) {
+        type = kDataTypeNoType;
+        object = [NSNull null];
+        hash = (NSString *)[NSNull null];
+    } else {
+        type = kDataTypeUnsupported;
+    }
+    
+    return @{KEY_FOR_TYPE: @(type), KEY_FOR_DATA: object, KEY_FOR_HASH: hash, KEY_FOR_THUM: @"NO"};
+}
+
+- (void)_replaceObjectAfterAdding:(id)object correspondingHash:(NSString *)hash ofFile:(NSString *)filePath
+{
+//    NSDictionary *newObj;
+//    DataType type;
+//    if ([object isKindOfClass:[UIImage class]]) {
+//        type = kDataTypeImageJPEG;
+//        newObj = @{KEY_FOR_TYPE: @(type), KEY_FOR_DATA: UIImageJPEGRepresentation(object, 1), KEY_FOR_HASH: hash, KEY_FOR_THUM: @"NO"};
+//    } else if ([object isKindOfClass:[NSString class]]) {
+//        type = kDataTypeText;
+//        newObj = @{KEY_FOR_TYPE: @(type), KEY_FOR_DATA: object, KEY_FOR_HASH: hash};
+//    } else {
+//        NSLog(@"Error in - (void)_replaceObjectAfterAdding:(id)object correspondingHash:(NSString *)hash");
+//    }
+    
+    NSDictionary *obj = [self _objFrom:object withHash:hash ofFile:filePath];
+    
+    [self.ssObjects replaceObjectAtIndex:[self.ssObjects count] - 1 withObject:obj];
     [self.carousel reloadItemAtIndex:[self.ssObjects count] - 1 animated:YES];
     
     self.isAdding = NO;
     [self _transformBack];
 }
 
-- (void)_addObject:(id)object toCarousel:(iCarousel *)carousel withHash:(NSString *)hash
+- (void)_addObject:(id)object toCarousel:(iCarousel *)carousel withHash:(NSString *)hash ofFile:(NSString *)filePath
 {
     //The following commented codes are for the situtation when there is MAX_Object_Number
 //    if (carousel.numberOfItems > 0 && ![object isKindOfClass:[NSNull class]])
@@ -266,15 +305,18 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 //        [carousel removeItemAtIndex:FIRST_OBJECT animated:YES];
 //    }
     
-    if ([object isKindOfClass:[UIImage class]]) {
-        UIImage *image = (UIImage *)object;
-        [self.ssObjects addObject:@{KEY_FOR_TYPE: @(kDataTypeImageJPEG), KEY_FOR_DATA:image, KEY_FOR_HASH:hash}];
-    } else if ([object isKindOfClass:[NSString class]]) {
-        NSString *text = (NSString *)object;
-        [self.ssObjects addObject:@{KEY_FOR_TYPE: @(kDataTypeText), KEY_FOR_DATA:text, KEY_FOR_HASH:hash}];
-    } else if ([object isKindOfClass:[NSNull class]]) {
-        [self.ssObjects addObject:@{KEY_FOR_TYPE :@(kDataTypeNoType), KEY_FOR_DATA : [NSNull null], KEY_FOR_HASH : [NSNull null]}];
-    }
+//    if ([object isKindOfClass:[UIImage class]]) {
+//        UIImage *image = (UIImage *)object;
+//        [self.ssObjects addObject:@{KEY_FOR_TYPE: @(kDataTypeImageJPEG), KEY_FOR_DATA:image, KEY_FOR_HASH:hash}];
+//    } else if ([object isKindOfClass:[NSString class]]) {
+//        NSString *text = (NSString *)object;
+//        [self.ssObjects addObject:@{KEY_FOR_TYPE: @(kDataTypeText), KEY_FOR_DATA:text, KEY_FOR_HASH:hash}];
+//    } else if ([object isKindOfClass:[NSNull class]]) {
+//        [self.ssObjects addObject:@{KEY_FOR_TYPE :@(kDataTypeNoType), KEY_FOR_DATA : [NSNull null], KEY_FOR_HASH : [NSNull null]}];
+//    }
+    NSDictionary *obj = [self _objFrom:object withHash:hash ofFile:filePath];
+    
+    [self.ssObjects addObject:obj];
     
     [carousel insertItemAtIndex:[self.ssObjects count] animated:YES];
     [carousel scrollToItemAtIndex:[self.ssObjects count] animated:YES];
@@ -322,7 +364,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
         self.isAdding = NO;
     } else {
         [self _transform];
-        [self _addObject:[NSNull null] toCarousel:self.carousel withHash:nil];
+        [self _addObject:[NSNull null] toCarousel:self.carousel withHash:nil ofFile:nil];
         self.isAdding = YES;
     }
 }
@@ -449,58 +491,58 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     [self.progressView setProgress:percentage animated:YES];
 }
 
-- (void)downloadDidFinishWithData:(NSData *)data contentType:(DataType)type
-{
-    [self _stopNetworkingAndUpdateUI];
-    NSString *hashStringOfData = [[MD5 defaultMD5] md5ForData:data];
-        
-    if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
-        UIImage *image = [[UIImage alloc] initWithData:data];
-        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
-            [self _replaceObjectAfterAdding:image correspondingHash:hashStringOfData];
-        } else {
-            [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
-        }
-    } else if (type == kDataTypeText) {
-        NSString *receivedText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
-            [self _replaceObjectAfterAdding:receivedText correspondingHash:hashStringOfData];
-        } else {
-            [self _addObject:receivedText toCarousel:self.carousel withHash:hashStringOfData];
-        }
-//        [SSFile saveFileToDocumentsOfName:@"Text.txt" withData:data];
-    } else {
-        NSLog(@"Error occurs!");
-    }
-}
-
-- (void)downloadDidFinishWithFile:(NSString *)filePath
-{
-    [self _stopNetworkingAndUpdateUI];
-    
-    NSData *data = [NSData dataWithContentsOfFile:filePath];
-    NSString *hashStringOfData = [[MD5 defaultMD5] md5ForData:data];
-    
-    if ([(NSString *)filePath.pathComponents.lastObject isImageFileName]) {
-        UIImage *image = [[UIImage alloc] initWithData:data];
-        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
-            [self _replaceObjectAfterAdding:image correspondingHash:hashStringOfData];
-        } else {
-            [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
-        }
-    } /*else if (type == kDataTypeText) {
+//- (void)downloadDidFinishWithData:(NSData *)data contentType:(DataType)type
+//{
+//    [self _stopNetworkingAndUpdateUI];
+//    NSString *hashStringOfData = [[MD5 defaultMD5] md5ForData:data];
+//        
+//    if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
+//        UIImage *image = [[UIImage alloc] initWithData:data];
+//        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+//            [self _replaceObjectAfterAdding:image correspondingHash:hashStringOfData];
+//        } else {
+//            [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
+//        }
+//    } else if (type == kDataTypeText) {
 //        NSString *receivedText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 //        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
 //            [self _replaceObjectAfterAdding:receivedText correspondingHash:hashStringOfData];
 //        } else {
 //            [self _addObject:receivedText toCarousel:self.carousel withHash:hashStringOfData];
 //        }
-        //        [SSFile saveFileToDocumentsOfName:@"Text.txt" withData:data];
-    } else {
-        NSLog(@"Error occurs!");
-    }*/
-    [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
-}
+////        [SSFile saveFileToDocumentsOfName:@"Text.txt" withData:data];
+//    } else {
+//        NSLog(@"Error occurs!");
+//    }
+//}
+//
+//- (void)downloadDidFinishWithFile:(NSString *)filePath
+//{
+//    [self _stopNetworkingAndUpdateUI];
+//    
+//    NSData *data = [NSData dataWithContentsOfFile:filePath];
+//    NSString *hashStringOfData = [[MD5 defaultMD5] md5ForData:data];
+//    
+//    if ([(NSString *)filePath.pathComponents.lastObject isImageFileName]) {
+//        UIImage *image = [[UIImage alloc] initWithData:data];
+//        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+//            [self _replaceObjectAfterAdding:image correspondingHash:hashStringOfData];
+//        } else {
+//            [self _addObject:image toCarousel:self.carousel withHash:hashStringOfData];
+//        }
+//    } /*else if (type == kDataTypeText) {
+////        NSString *receivedText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+////        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+////            [self _replaceObjectAfterAdding:receivedText correspondingHash:hashStringOfData];
+////        } else {
+////            [self _addObject:receivedText toCarousel:self.carousel withHash:hashStringOfData];
+////        }
+//        //        [SSFile saveFileToDocumentsOfName:@"Text.txt" withData:data];
+//    } else {
+//        NSLog(@"Error occurs!");
+//    }*/
+//    [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
+//}
 
 - (void)downloadDidFinishWithData:(NSData *)data ofFile:(NSString *)filePath
 {
@@ -508,23 +550,29 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     
     NSString *hash = [[MD5 defaultMD5] md5ForData:data];
     
-    if ([(NSString *)filePath.pathComponents.lastObject isImageFileName]) {
-        UIImage *image = [[UIImage alloc] initWithData:data];
-        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
-            [self _replaceObjectAfterAdding:image correspondingHash:hash];
-        } else {
-            [self _addObject:image toCarousel:self.carousel withHash:hash];
-        }
-    } else if ([(NSString *)filePath.pathComponents.lastObject isTextFileName]) {
-        NSString *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
-            [self _replaceObjectAfterAdding:text correspondingHash:hash];
-        } else {
-            [self _addObject:text toCarousel:self.carousel withHash:hash];
-        }
+    if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+        [self _replaceObjectAfterAdding:data correspondingHash:hash ofFile:filePath];
     } else {
-        NSLog(@"Other types!");
+        [self _addObject:data toCarousel:self.carousel withHash:hash ofFile:filePath];
     }
+    
+//    if ([(NSString *)filePath.pathComponents.lastObject isImageFileName]) {
+////        UIImage *image = [[UIImage alloc] initWithData:data];
+//        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+//            [self _replaceObjectAfterAdding:data correspondingHash:hash];
+//        } else {
+//            [self _addObject:data toCarousel:self.carousel withHash:hash];
+//        }
+//    } else if ([(NSString *)filePath.pathComponents.lastObject isTextFileName]) {
+////        NSString *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        if ([[self.ssObjects lastObject][KEY_FOR_TYPE] intValue] == kDataTypeNoType) {
+//            [self _replaceObjectAfterAdding:data correspondingHash:hash];
+//        } else {
+//            [self _addObject:data toCarousel:self.carousel withHash:hash];
+//        }
+//    } else {
+//        NSLog(@"Other types!");
+//    }
 }
 
 - (void)setupDocumentControllerWithURL:(NSURL *)url
@@ -1087,7 +1135,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
         if (self.internetIsOn) {
             [[NetworkHelper helper] uploadData:pictureData contentType:kDataTypeImageJPEG WithHashString:self.hashString delegate:self];
         }
-        [self _replaceObjectAfterAdding:image correspondingHash:self.hashString];
+        [self _replaceObjectAfterAdding:image correspondingHash:self.hashString ofFile:nil];
     }];
 }
 
@@ -1260,7 +1308,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     NSData *dataToSend = [inputText dataUsingEncoding:NSUTF8StringEncoding];
     self.hashString = [[MD5 defaultMD5] md5ForData:dataToSend];
     
-    [self _replaceObjectAfterAdding:inputText correspondingHash:self.hashString];
+    [self _replaceObjectAfterAdding:inputText correspondingHash:self.hashString ofFile:nil];
     
     [self _startNetworkingAndUpdateUI];
     

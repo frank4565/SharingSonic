@@ -12,9 +12,9 @@
 @protocol NetworkHelperDelegate <NSObject>
 
 - (void)uploadDidFinish;
-@optional
-- (void)downloadDidFinishWithData:(NSData *)data contentType:(DataType)type;
-- (void)downloadDidFinishWithFile:(NSString *)filePath;
+//@optional
+//- (void)downloadDidFinishWithData:(NSData *)data contentType:(DataType)type;
+//- (void)downloadDidFinishWithFile:(NSString *)filePath;
 - (void)downloadDidFinishWithData:(NSData *)data ofFile:(NSString *)filePath;
 
 @optional

@@ -71,6 +71,11 @@
 - (BOOL)isImageFileName;
 
 /**
+ @Returns `YES` if the receiver is an PNG file name
+ */
+- (BOOL)isPNGFileName;
+
+/**
  @Returns `YES` if the receiver is an HTML file name
  */
 - (BOOL)isHTMLFileName;

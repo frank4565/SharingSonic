@@ -94,6 +94,21 @@
 	return [uti conformsToUniversalTypeIdentifier:@"public.image"];
 }
 
+- (BOOL)isPNGFileName
+{
+    NSString *extension = [self pathExtension];
+    
+    // without extension we cannot know
+    if (![extension length])
+    {
+        return NO;
+    }
+    
+	NSString *uti = [NSString universalTypeIdentifierForFileExtension:extension];
+	
+	return [uti conformsToUniversalTypeIdentifier:(NSString *)kUTTypePNG];
+}
+
 - (BOOL)isHTMLFileName
 {
 	NSString *extension = [self pathExtension];
