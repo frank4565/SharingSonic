@@ -224,14 +224,6 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 //    }
 //}
 
-#pragma mark -
-#pragma mark Private Helper Method
-
-- (void)_uploadData:(NSData *)data type:(DataType)type
-{
-    
-}
-
 #pragma mark Carousel Related Private Method
 #define FIRST_OBJECT 0
 
@@ -416,7 +408,13 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
         [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:[self.files filePathOfHash:self.ssObjects[indexOfCenteredItem][KEY_FOR_HASH]]]];
         [self.docInteractionController presentOptionsMenuFromRect:self.view.bounds inView:self.view animated:YES];
     } else if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        //TODO: Delete current item.
+        if (![SSFile deleteFileOfIndex:self.carousel.currentItemIndex]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning!" message:@"Deletion Failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+        } else {
+            [self.ssObjects removeObjectAtIndex:self.carousel.currentItemIndex];
+            [self.carousel removeItemAtIndex:self.carousel.currentItemIndex animated:YES];
+        }
     }
 }
 
