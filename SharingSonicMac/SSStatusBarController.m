@@ -132,6 +132,11 @@
     NSLog(@"%@", filePath);
 }
 
+- (void)downloadDidFinishWithData:(NSData *)data ofFile:(NSString *)filePath
+{
+    NSLog(@"%@", filePath);
+}
+
 - (void)failedWithError:(NSError *)error
 {
     NSAlert *alert = [NSAlert alertWithError:error];

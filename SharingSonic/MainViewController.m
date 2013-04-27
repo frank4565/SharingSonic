@@ -525,8 +525,6 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     } else {
         NSLog(@"Other types!");
     }
-
-//    [self setupDocumentControllerWithURL:[NSURL fileURLWithPath:filePath]];
 }
 
 - (void)setupDocumentControllerWithURL:(NSURL *)url
