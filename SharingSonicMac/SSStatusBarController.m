@@ -260,17 +260,17 @@
         [self.bonjour sendFile:fileURL.path];
     } else {
         self.lastFileURL = fileURL;
-        [NetworkHelper messagePushServerWithUdid:self.openUdid
-                                            text:@"New File From Mac!"
-                               completionHandler:^{
-                                   NSLog(@"Push Notification has sent from Mac!");
-                               }];
+//        [NetworkHelper messagePushServerWithUdid:self.openUdid
+//                                            text:@"New File From Mac!"
+//                               completionHandler:^{
+//                                   NSLog(@"Push Notification has sent from Mac!");
+//                               }];
+        NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL];
+        [self _didAddNewFileOfData:data];
+        [self _soundShare];
     }
     
     // Sharing throught Internet, don't use for now.
-//    NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL];
-//    [self _didAddNewFileOfData:data];
-//    [self _soundShare];
 }
 
 @end

@@ -488,18 +488,20 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     }
 }
 
-- (void)failedWithError:(NSError *)error
+- (void)failedWithStatus:(NSString *)errorStatus
 {
     [self _stopNetworkingAndUpdateUI];
     
-    if ([error code] == -1004) {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error occurs" message:@"Preparetion failed. Check your Network Status." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [errorAlert show];
-    } else if ([error code] == -1002) {
-        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error occurs" message:@"Server is not ready!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [errorAlert show];
-        NSLog(@"%@",error);
-    }
+    NSLog(@"%@",errorStatus);
+    [SVProgressHUD showErrorWithStatus:errorStatus];
+    
+//    if ([error code] == -1004) {
+//        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error occurs" message:@"Preparetion failed. Check your Network Status." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        [errorAlert show];
+//    } else if ([error code] == -1002) {
+//        UIAlertView *errorAlert = [[UIAlertView alloc] initWithTitle:@"Error occurs" message:@"Server is not ready!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        [errorAlert show];
+//    }
     
 }
 

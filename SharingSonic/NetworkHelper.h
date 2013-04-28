@@ -18,7 +18,7 @@
 @optional
 - (void)uploadDidReceiveResponse;
 - (void)downloadDidReceiveResponseWithContentType:(DataType)type;
-- (void)failedWithError:(NSError *)error;
+- (void)failedWithStatus:(NSString *)errorStatus;
 - (void)didSendDataLengthInTotal:(long long)totalSentLength withTotalBytesExpectedToWrite:(long long)totalBytesExpectedToWrite;
 - (void)didReceiveDataLengthInTotal:(long long)totalReceivedLength withTotalBytesExpectedToRead:(long long)totalBytesExpectedToRead;
 

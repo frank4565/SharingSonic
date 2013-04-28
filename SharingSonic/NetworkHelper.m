@@ -42,7 +42,9 @@ static NSString * const pushServerSuffix = @"pushTest/api/api.php";
 //        [self.delegate downloadDidFinishWithData:(NSData *)responseObject contentType:type];
         [self.delegate downloadDidFinishWithData:(NSData *)responseObject ofFile:file];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [self.delegate failedWithError:error];
+        if (error.domain == AFNetworkingErrorDomain && error.code == -1011) {
+            [self.delegate failedWithStatus:@"Failed to fetch!"];
+        }
     }];
     
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
@@ -70,7 +72,7 @@ static NSString * const pushServerSuffix = @"pushTest/api/api.php";
     AFHTTPRequestOperation *operation = [[AFSharingSonicClient sharedClient] HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
         [self.delegate uploadDidFinish];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [self.delegate failedWithError:error];
+        [self.delegate failedWithStatus:@"Failed to upload!"];
     }];
     [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         [self.delegate didSendDataLengthInTotal:totalBytesWritten withTotalBytesExpectedToWrite:totalBytesExpectedToWrite];
