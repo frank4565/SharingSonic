@@ -944,7 +944,11 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
             return image;
         };
     } else if (type == kDataTypeText) {
-        textView.text = content;
+        if ([content isKindOfClass:[NSData class]]) {
+            textView.text = [[NSString alloc] initWithBytes:[content bytes] length:[content length] encoding:NSUTF8StringEncoding];
+        } else {
+            textView.text = content;
+        }
     } else if (type == kDataTypeUnsupported) {
         //TODO: Other type to support
     }
