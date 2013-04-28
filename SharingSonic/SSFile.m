@@ -144,7 +144,7 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
 
 + (BOOL)deleteFileOfIndex:(NSUInteger)index
 {
-    NSArray *files = [[NSUserDefaults standardUserDefaults] arrayForKey:kFileList];
+    NSArray *files = [[[NSUserDefaults standardUserDefaults] arrayForKey:kFileList] copy];
     if (!files) {
         NSLog(@"No file array");
         return NO;
@@ -159,24 +159,28 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
     //Delete file
     NSString *filePath = [[self class] filePathOf:fileDic];
     [[NSFileManager defaultManager] removeItemAtPath:filePath error:&deletionError];
+    
     if (deletionError != nil) {
         NSLog(@"File deletion failed, error:%@", deletionError);
         return NO;
+    } else {
+        //Synchronize NSUserDefaults
+        NSMutableArray *fileArrayToModify = [files mutableCopy];
+        [fileArrayToModify removeObjectAtIndex:index];
+        [[NSUserDefaults standardUserDefaults] setObject:fileArrayToModify forKey:kFileList];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
     //Delete thumbnail
-    NSString *fileHashString = [[self class] fileHashStringOf:fileDic];
-    NSString *thumbPath = [[self class] thumbImagePath:fileHashString];
-    [[NSFileManager defaultManager] removeItemAtPath:thumbPath error:&deletionError];
-    if (deletionError != nil) {
-        NSLog(@"Thumbnail deletion failed, error:%@", deletionError);
-        return NO;
+    if ([[self class] hasThumbImage:fileDic]) {
+        NSString *fileHashString = [[self class] fileHashStringOf:fileDic];
+        NSString *thumbPath = [[self class] thumbImagePath:fileHashString];
+        [[NSFileManager defaultManager] removeItemAtPath:thumbPath error:&deletionError];
+        if (deletionError != nil) {
+            NSLog(@"Thumbnail deletion failed, error:%@", deletionError);
+            return NO;
+        }
     }
-    
-    //Delete array and NSUserDefaults
-    NSMutableArray *fileArrayToModify = [files mutableCopy];
-    [fileArrayToModify removeObjectAtIndex:index];
-    [[NSUserDefaults standardUserDefaults] setObject:fileArrayToModify forKey:kFileList];
     
     return YES;
 }

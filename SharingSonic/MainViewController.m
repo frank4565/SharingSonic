@@ -811,11 +811,17 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 {
     FXImageView *imageView = nil;
     UITextView *textView = nil;
-    UIView *addView = nil;
     
     //Determine content type
     DataType type;    
     type = [self.ssObjects[index][KEY_FOR_TYPE] intValue];
+    
+    // If it's addView, there's no need for reuse since there will be only one addView.
+    if (type == kDataTypeNoType) {
+        ReflectionView *reflectionView = [self _allocReflectionView];
+        [reflectionView addSubview:[[[NSBundle mainBundle] loadNibNamed:@"CustomView" owner:self options:nil] lastObject]];
+        return reflectionView;        
+    }
     
     //create new view if no view is available for recycling
     if (view == nil)
@@ -831,13 +837,15 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
             if (type == kDataTypeText) {
                 textView = [self _allocTextViewForReflectionView:reflectionView];
                 view = reflectionView;
-            } else if (type == kDataTypeNoType) {
-                //addView
-                addView = [[[NSBundle mainBundle] loadNibNamed:@"CustomView" owner:self options:nil] lastObject];
-                addView.tag = ADD_VIEW_TAG;
-                [reflectionView addSubview:addView];
-                view = reflectionView;
-            } else if (type == kDataTypeUnsupported) {
+            }
+//            else if (type == kDataTypeNoType) {
+//                //addView
+//                addView = [[[NSBundle mainBundle] loadNibNamed:@"CustomView" owner:self options:nil] lastObject];
+//                addView.tag = ADD_VIEW_TAG;
+//                [reflectionView addSubview:addView];
+//                view = reflectionView;
+//            }
+            else if (type == kDataTypeUnsupported) {
                 //TODO: Other type to support
             }            
         }
@@ -853,12 +861,6 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
             if (![view isKindOfClass:[FXImageView class]]) {
                 view = [self _allocFXImageView];
             }
-            
-//            if ([view viewWithTag:IMAGE_VIEW_TAG]) {
-//                imageView = (FXImageView *)[view viewWithTag:IMAGE_VIEW_TAG];
-//            }
-//            else imageView = [self _allocImageViewForReflectionView:view];
-//            [self _removeSubviewsOfView:view exceptView:imageView];
         } else {
             // Check if "view" is ReflectionView
             if ([view isKindOfClass:[ReflectionView class]]) {
@@ -870,17 +872,18 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 //            [self _removeSubviewsOfView:view exceptView:textView];
                 } else if (type == kDataTypeUnsupported) {
                     //TODO: Other type to support
-                } else if (type == kDataTypeNoType) {
-//                    if ([view viewWithTag:ADD_VIEW_TAG]) {
-                        addView = [view viewWithTag:ADD_VIEW_TAG];
-//                    }
-                    //            else {
-                    //                addView =
-                    //                addView.tag = ADD_VIEW_TAG;
-                    //                [view addSubview:addView];
-                    //            }
-                    //            [self _removeSubviewsOfView:view exceptView:addView];
                 }
+//                } else if (type == kDataTypeNoType) {
+////                    if ([view viewWithTag:ADD_VIEW_TAG]) {
+//                        addView = [view viewWithTag:ADD_VIEW_TAG];
+////                    }
+//                    //            else {
+//                    //                addView =
+//                    //                addView.tag = ADD_VIEW_TAG;
+//                    //                [view addSubview:addView];
+//                    //            }
+//                    //            [self _removeSubviewsOfView:view exceptView:addView];
+//                }
 
             } else {
                 // view is not a ReflectionView, i.e. it's FXImageView,
@@ -892,13 +895,15 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
                 if (type == kDataTypeText) {
                     textView = [self _allocTextViewForReflectionView:reflectionView];
                     view = reflectionView;
-                } else if (type == kDataTypeNoType) {
-                    //addView
-                    addView = [[[NSBundle mainBundle] loadNibNamed:@"CustomView" owner:self options:nil] lastObject];
-                    addView.tag = ADD_VIEW_TAG;
-                    [reflectionView addSubview:addView];
-                    view = reflectionView;
-                } else if (type == kDataTypeUnsupported) {
+                }
+//                else if (type == kDataTypeNoType) {
+//                    //addView
+//                    addView = [[[NSBundle mainBundle] loadNibNamed:@"CustomView" owner:self options:nil] lastObject];
+//                    addView.tag = ADD_VIEW_TAG;
+//                    [reflectionView addSubview:addView];
+//                    view = reflectionView;
+//                }
+                else if (type == kDataTypeUnsupported) {
                     //TODO: Other type to support
                 }
             }
@@ -1214,7 +1219,9 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     NSData *dataToSend = [inputText dataUsingEncoding:NSUTF8StringEncoding];
     self.hashString = [[MD5 defaultMD5] md5ForData:dataToSend];
     
-    [self _replaceObjectAfterAdding:inputText correspondingHash:self.hashString ofFile:nil];
+    NSString *textPath = [SSFile saveFileToDocumentsOfName:@"Text.txt" withData:dataToSend];
+    
+    [self _replaceObjectAfterAdding:inputText correspondingHash:self.hashString ofFile:textPath];
     
     [self _startNetworkingAndUpdateUI];
     
