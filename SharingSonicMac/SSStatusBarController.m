@@ -265,12 +265,13 @@
 //                               completionHandler:^{
 //                                   NSLog(@"Push Notification has sent from Mac!");
 //                               }];
-        NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL];
-        [self _didAddNewFileOfData:data];
-        [self _soundShare];
+
     }
     
-    // Sharing throught Internet, don't use for now.
+    // Sharing throught Internet
+    NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL];
+    [self _didAddNewFileOfData:data];
+    [self _soundShare];
 }
 
 @end

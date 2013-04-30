@@ -819,7 +819,9 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     // If it's addView, there's no need for reuse since there will be only one addView.
     if (type == kDataTypeNoType) {
         ReflectionView *reflectionView = [self _allocReflectionView];
-        [reflectionView addSubview:[[[NSBundle mainBundle] loadNibNamed:@"CustomView" owner:self options:nil] lastObject]];
+        UIView *addView = [[[NSBundle mainBundle] loadNibNamed:@"CustomView" owner:self options:nil] lastObject];
+        addView.tag = ADD_VIEW_TAG;
+        [reflectionView addSubview:addView];
         return reflectionView;        
     }
     
@@ -852,7 +854,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     }
     else
     {
-        if (type == kDataTypeImageJPEG) {
+        if (type == (kDataTypeImageJPEG | kDataTypeImagePNG)) {
             // Due to the different class for image and others,
             // only need to check the class type. If it is not
             // a FXImageView, alloc a new one. Else don't do anything
@@ -865,9 +867,19 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
             // Check if "view" is ReflectionView
             if ([view isKindOfClass:[ReflectionView class]]) {
                 // Retrive tagged view according to different type.
+                
+                UIView *add = [view viewWithTag:ADD_VIEW_TAG];
+                if (add != nil) {
+                    // the view is addView
+                    [add removeFromSuperview];
+                }
+                
                 if (type == kDataTypeText) {
 //                    if ([view viewWithTag:TEXT_VIEW_TAG]) {
                     textView = (UITextView *)[view viewWithTag:TEXT_VIEW_TAG];
+                    if (textView == nil) {
+                        textView = [self _allocTextViewForReflectionView:(ReflectionView *)view];
+                    }
 //                    }
 //            [self _removeSubviewsOfView:view exceptView:textView];
                 } else if (type == kDataTypeUnsupported) {
@@ -969,7 +981,9 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 {
     self.hashString = self.ssObjects[index][KEY_FOR_HASH];
     
-    if (self.carousel.currentItemIndex == index && self.hashString) {
+    if (self.carousel.currentItemIndex == index
+        && [self.ssObjects[index][KEY_FOR_TYPE] intValue] == (kDataTypeImageJPEG | kDataTypeImagePNG)
+        && self.hashString) {
         NSString *path = [SSFile filePathOf:self.files.fileArray[index]];
         NSLog(@"Path String: %@, URL: %@",path, [NSURL fileURLWithPath:path isDirectory:NO]);
         self.imageURLToBeShownInFullScreen = [NSURL fileURLWithPath:path isDirectory:NO];
@@ -1226,7 +1240,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     [self _startNetworkingAndUpdateUI];
     
     if (self.bonjourIsOn && self.bonjour.foundServices.count > 0) {
-        //TODO: send text through bonjour
+        [self.bonjour sendFile:textPath];
     }
     
     if (self.internetIsOn) {

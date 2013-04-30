@@ -38,7 +38,7 @@ static bool running = true;
 
 @implementation FrequencyAnalyzer
 
-#define MAX_ERROR 200
+#define MAX_ERROR 100
 - (NSString *)findCharacterForFreq:(float)freq
 {
     NSString *freqChar;
