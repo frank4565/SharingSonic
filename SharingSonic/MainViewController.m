@@ -847,6 +847,8 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 //            }
             else if (type == kDataTypeUnsupported) {
                 //TODO: Other type to support
+                imageView = [self _allocFXImageView];
+                view = imageView;
             }            
         }
     }
@@ -956,6 +958,8 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
         }
     } else if (type == kDataTypeUnsupported) {
         //TODO: Other type to support
+        NSLog(@"Unsupported");
+        ((FXImageView *)view).image = [UIImage imageNamed:@"file.png"];
     }
 
 //    [(ReflectionView *)view update];
