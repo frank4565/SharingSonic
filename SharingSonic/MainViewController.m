@@ -826,7 +826,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     //create new view if no view is available for recycling
     if (view == nil)
     {
-        if (type == kDataTypeImageJPEG) {
+        if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
             // Type is image, use FXImageView
             imageView = [self _allocFXImageView];
             view = imageView;
@@ -852,7 +852,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     }
     else
     {
-        if (type == kDataTypeImageJPEG) {
+        if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
             // Due to the different class for image and others,
             // only need to check the class type. If it is not
             // a FXImageView, alloc a new one. Else don't do anything
