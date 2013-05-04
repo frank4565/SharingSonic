@@ -30,7 +30,7 @@
 - (OSStatus)generateSoundOfHashString:(NSString *)hashString
 {
     //add starting and ending pattern
-    NSString *hashStringToSend = [NSString stringWithFormat:@"yy%@xx",hashString];
+    NSString *hashStringToSend = [NSString stringWithFormat:@"xy%@yx",hashString];
     
     NSUInteger repeatTimes = [hashStringToSend length];
     

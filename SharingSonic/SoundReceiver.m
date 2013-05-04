@@ -60,7 +60,6 @@ static int const MD5_LEN = 32;
     self.analyzedString = [NSMutableString stringWithCapacity:[self.detectedHashStringArray count]];
     for (int i = 0; i < [self.detectedHashStringArray count]; i++) {
         //remove the starting and ending pattern character.
-        //Actually, there shouldn't be y as the starting pattern wasn't added to self.detectedHashStringArray.
         if (!([self.detectedHashStringArray[i] isEqualToString:@"x"] || [self.detectedHashStringArray[i] isEqualToString:@"y"]) ) {
             [self.analyzedString appendString:self.detectedHashStringArray[i]];
         }
@@ -92,7 +91,8 @@ static int const MD5_LEN = 32;
         // Determine the starting pattern and ending pattern
         if ([self.freqCharArray count] > 1) {
             NSString *lastChar = [self.freqCharArray lastObject];
-            if ([lastChar isEqualToString:@"y"]) {
+            NSString *secondLastChar = [self.freqCharArray objectAtIndex:(self.freqCharArray.count - 2)];
+            if ([secondLastChar isEqualToString:@"x"] && [lastChar isEqualToString:@"y"]) {
                 //start pattern found
                 NSLog(@"Start Pattern Found!");
                 if ([self.delegate respondsToSelector:@selector(didDetectStartingPattern)]) {
@@ -101,7 +101,7 @@ static int const MD5_LEN = 32;
                 self.isDetected = YES;
                 self.isAnalyzed = NO;
                 self.startTime = [NSDate date];
-            } else if (self.isDetected && [[self.freqCharArray lastObject] isEqualToString:@"x"]) {
+            } else if (self.isDetected && [secondLastChar isEqualToString:@"y"] && [lastChar isEqualToString:@"x"]) {
                 //ending pattern found
                 NSLog(@"Ending Pattern Found!");
                 [self _finishAnalyze];
@@ -150,23 +150,24 @@ static int const MAX_SOUND_DURATION = 2;
         [self _finishAnalyze];
     }
     
-    // NSLog(@"%f, %f", self.meanFreq, freq);
+//    NSLog(@"%f, %f", self.meanFreq, freq);
     
     if (freq > MIN_FREQ_IN_USE) {
+//        NSLog(@"%f, %f", self.meanFreq, freq);
         if ([self isFrequency:self.meanFreq EqualToFrequency:freq]) {
             if (self.sameFreqCount > 1 && self.sameFreqCount <= MAX_SAME_FREQUENCY_COUNT) {
                 //find the average frequency of the frequencies analyzed.
                 [self updateMeanFrequencyWith:freq];
                 //if there are more than 4 same frequecies.
                 if (self.sameFreqCount > MAX_SAME_FREQUENCY_COUNT) {
-                    // NSLog(@"1 the sameFreqCount is %d.", self.sameFreqCount);
+//                    NSLog(@"1 the sameFreqCount is %d.", self.sameFreqCount);
                     [self _addChar];
                     self.sameFreqCount = 0;
                 }
             } else if (self.sameFreqCount == 0) {
                 self.sameFreqCount++;
                 [self updateMeanFrequencyWith:freq];
-                // NSLog(@"2 the sameFreqCount is %d.", self.sameFreqCount);
+//                NSLog(@"2 the sameFreqCount is %d.", self.sameFreqCount);
             } else {
 #if TARGET_OS_IPHONE
                 NSLog(@"ERROR of sameFreqCount:%d.", self.sameFreqCount);
@@ -177,7 +178,7 @@ static int const MAX_SOUND_DURATION = 2;
 #endif
             }
         } else {
-            // NSLog(@"3 the sameFreqCount is %d.", self.sameFreqCount);
+//            NSLog(@"3 the sameFreqCount is %d.", self.sameFreqCount);
             if (self.sameFreqCount > 1) {
                 [self _addChar];
             }
