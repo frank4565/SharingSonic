@@ -100,7 +100,7 @@ NSString * const kFileList = @"SSKEY_FILE_LIST";
     // Write to storage
     while ([[NSFileManager defaultManager] fileExistsAtPath:filePath] == YES) {
         //Rename it
-        NSLog(@"Rename it");
+//        NSLog(@"Rename it");
         filePath = [filePath pathByIncrementingSequenceNumber];
     }
     NSLog(@"%@", filePath);
