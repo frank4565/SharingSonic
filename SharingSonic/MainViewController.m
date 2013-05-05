@@ -18,6 +18,7 @@
 #import "UIButtonWithLargerTapArea.h"
 #import "NSString+DTUTI.h"
 #import "SSFile.h"
+#import "UIImage+Thumbnail.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -971,7 +972,9 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     } else if (type == kDataTypeUnsupported) {
         //TODO: Other type to support
         NSLog(@"Unsupported");
-        ((FXImageView *)view).image = [UIImage imageNamed:@"file.png"];
+//        ((FXImageView *)view).image = [UIImage imageNamed:@"file.png"];
+        NSString *fileName = [self.files fileNameOfHash:self.ssObjects[index][KEY_FOR_HASH]];
+        ((FXImageView *)view).image = [UIImage drawText:fileName inImage:[UIImage imageNamed:@"file.png"] atPoint:CGPointMake(50, 100)];
     }
 
 //    [(ReflectionView *)view update];

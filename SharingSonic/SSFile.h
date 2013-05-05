@@ -17,6 +17,8 @@
 
 - (NSString *)filePathOfHash:(NSString *)hash;
 
+- (NSString *)fileNameOfHash:(NSString *)hash;
+
 + (NSData *)fileDataOf:(NSDictionary *)ssfile;
 
 + (NSString *)fileHashStringOf:(NSDictionary *)ssfile;

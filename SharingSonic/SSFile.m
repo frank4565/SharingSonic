@@ -35,6 +35,11 @@
     return nil;
 }
 
+- (NSString *)fileNameOfHash:(NSString *)hash
+{
+    return [self filePathOfHash:hash].pathComponents.lastObject;
+}
+
 + (NSString *)thumbPathOf:(NSDictionary *)ssfile
 {
     return [[self class] thumbImagePath:[[self class] fileHashStringOf:ssfile]];
