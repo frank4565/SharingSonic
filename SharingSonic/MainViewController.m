@@ -857,7 +857,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     }
     else
     {
-        if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG) {
+        if (type == kDataTypeImageJPEG || type == kDataTypeImagePNG || type == kDataTypeUnsupported) {
             // Due to the different class for image and others,
             // only need to check the class type. If it is not
             // a FXImageView, alloc a new one. Else don't do anything
@@ -885,8 +885,6 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
                     }
 //                    }
 //            [self _removeSubviewsOfView:view exceptView:textView];
-                } else if (type == kDataTypeUnsupported) {
-                    //TODO: Other type to support
                 }
 //                } else if (type == kDataTypeNoType) {
 ////                    if ([view viewWithTag:ADD_VIEW_TAG]) {
