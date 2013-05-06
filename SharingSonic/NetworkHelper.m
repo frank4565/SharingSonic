@@ -43,7 +43,9 @@ static NSString * const pushServerSuffix = @"pushTest/api/api.php";
         [self.delegate downloadDidFinishWithData:(NSData *)responseObject ofFile:file];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (error.domain == AFNetworkingErrorDomain && error.code == -1011) {
-            [self.delegate failedWithStatus:@"Failed to fetch!"];
+            if ([self.delegate respondsToSelector:@selector(failedWithStatus:)]) {
+                [self.delegate failedWithStatus:@"Failed to fetch!"];
+            }
         }
     }];
     
