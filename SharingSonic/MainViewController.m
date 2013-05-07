@@ -972,7 +972,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
         NSLog(@"Unsupported");
 //        ((FXImageView *)view).image = [UIImage imageNamed:@"file.png"];
         NSString *fileName = [self.files fileNameOfHash:self.ssObjects[index][KEY_FOR_HASH]];
-        ((FXImageView *)view).image = [UIImage drawText:fileName inImage:[UIImage imageNamed:@"file.png"] atPoint:CGPointMake(50, 100)];
+        ((FXImageView *)view).image = [UIImage drawText:fileName inImage:[UIImage imageNamed:@"file.png"] atPoint:CGPointMake(32, 70)];
     }
 
 //    [(ReflectionView *)view update];

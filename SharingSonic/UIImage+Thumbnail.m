@@ -18,9 +18,13 @@
     UIFont *font = [UIFont boldSystemFontOfSize:14];
     UIGraphicsBeginImageContextWithOptions(image.size, NO, 0.0);
     [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
-    CGRect rect = CGRectMake(point.x, point.y, image.size.width/2.0, image.size.height/2.0);
+    CGRect rect = CGRectMake(point.x, point.y, 140.0f, 120.0f);
     [[UIColor blackColor] set];
-    [text drawInRect:CGRectIntegral(rect) withFont:font];
+    
+//    CGFloat *actualFontSize = NULL;
+//    [text sizeWithFont:font minFontSize:12.0f actualFontSize:actualFontSize forWidth:140.0f lineBreakMode:NSLineBreakByTruncatingMiddle];
+    
+    [text drawInRect:CGRectIntegral(rect) withFont:font lineBreakMode:NSLineBreakByTruncatingMiddle];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
