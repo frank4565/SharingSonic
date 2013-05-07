@@ -16,7 +16,7 @@
 {
     
     UIFont *font = [UIFont boldSystemFontOfSize:14];
-    UIGraphicsBeginImageContext(image.size);
+    UIGraphicsBeginImageContextWithOptions(image.size, NO, 0.0);
     [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
     CGRect rect = CGRectMake(point.x, point.y, image.size.width/2.0, image.size.height/2.0);
     [[UIColor blackColor] set];
