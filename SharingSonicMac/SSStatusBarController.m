@@ -27,7 +27,7 @@
 
 @implementation SSStatusBarController
 
-static NSString const *IS_JOINED = "Is Joined";
+static NSString const *IS_JOINED = @"Is Joined";
 
 - (BOOL)isJoined
 {
