@@ -982,6 +982,7 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     } else if (type == kDataTypeUnsupported) {
         //TODO: Other type to support
         NSLog(@"Unsupported");
+        ((FXImageView *)view).processedImage = [UIImage imageNamed:@"placeholder.png"];
 //        ((FXImageView *)view).image = [UIImage imageNamed:@"file.png"];
         NSString *fileName = [self.files fileNameOfHash:self.ssObjects[index][KEY_FOR_HASH]];
         ((FXImageView *)view).image = [UIImage drawText:fileName inImage:[UIImage imageNamed:@"file.png"] atPoint:CGPointMake(32, 70)];
