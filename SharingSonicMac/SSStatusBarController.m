@@ -21,9 +21,18 @@
 @property (nonatomic, strong, readonly) NSString *openUdid;
 @property (nonatomic, strong) NSURL *lastFileURL;
 @property (nonatomic, strong) NSMutableArray *unsentURLs;
+
+@property (nonatomic, readonly) BOOL isJoined;
 @end
 
 @implementation SSStatusBarController
+
+static NSString const *IS_JOINED = "Is Joined";
+
+- (BOOL)isJoined
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:(NSString *)IS_JOINED];
+}
 
 - (NSString *)openUdid
 {
@@ -73,13 +82,16 @@
     self.bonjour.delegate = self;
     //SSBonjour end
     
-    [NetworkHelper joinPushServerWithUdid:self.openUdid
-                               secretCode:@"TEST"
-                                     name:@"PowerQian's MacBookPro"
-                              deviceToken:@"Mac"
-                        completionHandler:^{
-                            NSLog(@"Mac has joined Push Server");
-                        }];
+    if (!self.isJoined) {
+        [NetworkHelper joinPushServerWithUdid:self.openUdid
+                                   secretCode:@"TEST"
+                                         name:@"PowerQian's MacBookPro"
+                                  deviceToken:@"Mac"
+                            completionHandler:^{
+                                NSLog(@"Mac has joined Push Server");
+                                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:IS_JOINED];
+                            }];
+    }
 }
 
 #pragma mark Lazy initializer

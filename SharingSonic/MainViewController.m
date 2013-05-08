@@ -37,6 +37,7 @@ TextMessageViewControllerDelegate>
 //Sound Property
 @property (nonatomic) Float32 *sampleData;
 @property (nonatomic) BOOL hasSample;
+@property (nonatomic) BOOL sampleInUse;
 //Bonjour
 @property (nonatomic, strong) SSBonjour *bonjour;
 @property (nonatomic, strong) UIDocumentInteractionController *docInteractionController;
@@ -617,8 +618,10 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
 }
 - (void)didGetSamples:(Float32 *)samples
 {
-    self.sampleData = samples;
-    self.hasSample = YES;
+    if (!self.sampleInUse) {
+        self.sampleData = samples;
+        self.hasSample = YES;
+    }
     
     if (self.waveform.window && !self.waveform.isUpdatingUI) {
         [self.waveform setNeedsDisplay];
@@ -671,9 +674,11 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     if (self.hasSample) {
         NSMutableArray *yValues = [[NSMutableArray alloc] init];
 //        NSUInteger middle = SINGLE_BUFFER_SAMPLE_COUNT / 2;
+        self.sampleInUse = YES;
         for (int i = 0; i < points; i++) {
             [yValues addObject:@(self.sampleData[i])];
         }
+        self.sampleInUse = NO;
         return yValues;
     } else return nil;
 }

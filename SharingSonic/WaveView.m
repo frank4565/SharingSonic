@@ -82,7 +82,7 @@
 #define CORNER_RADIUS 12.0
 #define INCREMENT 0.5
 //#define ACTUAL_POINTS_NUMBER 50
-static NSUInteger const ACTUAL_POINTS_NUMBER = 100;
+static NSUInteger const ACTUAL_POINTS_NUMBER = 50;
 
 - (void)drawRect:(CGRect)rect
 {
@@ -106,21 +106,28 @@ static NSUInteger const ACTUAL_POINTS_NUMBER = 100;
         [wave moveToPoint:CGPointMake(self.bounds.origin.x, self.bounds.size.height / 2)];
         //    CGContextMoveToPoint(context, point.x,point.y);
         
+        CGFloat range = xAxesRightBounds - xAxesLeftBounds - INCREMENT * 2;
+
         for (float i = xAxesLeftBounds + INCREMENT; i <= xAxesRightBounds - INCREMENT; i += INCREMENT) {
             //        CGFloat yInLoop = [self.dataSource yValueForX:i
             //                                         inPixelValue:self.bounds.size.width
             //                                            forSender:self];
-            CGFloat range = xAxesRightBounds - xAxesLeftBounds - INCREMENT * 2;
-            NSUInteger yNumber = floorf(i * ACTUAL_POINTS_NUMBER / range);
-            float decimalPlace = i * ACTUAL_POINTS_NUMBER / range - yNumber;
+            NSUInteger yNumber = floorf(i * (ACTUAL_POINTS_NUMBER - 1) / range);
+            float decimalPlace = i * (ACTUAL_POINTS_NUMBER - 1) / range - yNumber;
             CGFloat firstY = 0;
             CGFloat secondY = 0;
-            if (yNumber < ACTUAL_POINTS_NUMBER) {
+            if (yNumber < ACTUAL_POINTS_NUMBER - 2) {
                 firstY = [ys[yNumber] floatValue];
-            }
-            if (yNumber + 1 < ACTUAL_POINTS_NUMBER) {
                 secondY = [ys[yNumber + 1] floatValue];
+            } else {
+//                if (yNumber == ACTUAL_POINTS_NUMBER - 1) {
+                    firstY = [ys[yNumber] floatValue];
+                    secondY = [ys[yNumber] floatValue] - [ys[yNumber - 1] floatValue];
+//                }
             }
+//            if (yNumber + 1 < ACTUAL_POINTS_NUMBER) {
+//                secondY = [ys[yNumber + 1] floatValue];
+//            }
             CGFloat yInLoop = [self _cosineInterpolationWithFirstY:firstY Second:secondY xLocation:decimalPlace];
             
             CGPoint pointOnView = [self translateValueToViewWithX:i
