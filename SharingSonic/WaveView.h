@@ -14,6 +14,8 @@
 @protocol WaveViewDataSource <NSObject>
 
 - (Float32)yValueForX:(Float32)xValue inPixelValue:(CGFloat)pixel forSender:(WaveView *)sender;
+@optional
+- (NSArray *)waveView:(WaveView *)sender getYValueOfNumber:(NSUInteger)points;
 
 @end
 

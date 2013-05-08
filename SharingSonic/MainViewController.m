@@ -666,6 +666,18 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
     return yValueIndB;
 }
 
+- (NSArray *)waveView:(WaveView *)sender getYValueOfNumber:(NSUInteger)points
+{
+    if (self.hasSample) {
+        NSMutableArray *yValues = [[NSMutableArray alloc] init];
+//        NSUInteger middle = SINGLE_BUFFER_SAMPLE_COUNT / 2;
+        for (int i = 0; i < points; i++) {
+            [yValues addObject:@(self.sampleData[i])];
+        }
+        return yValues;
+    } else return nil;
+}
+
 //#pragma mark SonicTableViewDataSource
 //
 //- (NSInteger)rowsForSonicTable:(SonicTableView *)tableView
