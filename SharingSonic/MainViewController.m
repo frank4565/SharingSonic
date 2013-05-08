@@ -968,7 +968,9 @@ static NSString const *INTERNET_SWITCH_VALUE = @"Internet switch value";
         }
         // cache thumb image.
         ((FXImageView *)view).customEffectsBlock = ^(UIImage *image){
-            if ([self.ssObjects[index][KEY_FOR_THUM] isEqualToString:@"NO"]) {
+            if (index >= [self.ssObjects count]) {
+                NSLog(@"Weird exception!");
+            } else if ([self.ssObjects[index][KEY_FOR_THUM] isEqualToString:@"NO"]) {
                 NSMutableDictionary *obj = [self.ssObjects[index] mutableCopy];
                 obj[KEY_FOR_DATA] = image;
                 obj[KEY_FOR_THUM] = @"YES";

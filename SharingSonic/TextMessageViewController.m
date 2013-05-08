@@ -49,10 +49,15 @@
 
 - (IBAction)done:(UIBarButtonItem *)sender {
     NSString *textInput = self.textView.text;
-    [self.textView resignFirstResponder];
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.delegate doneWithTextInput:textInput];
-    }];
+    if (textInput == nil) {
+        UIAlertView *noInputAlert = [[UIAlertView alloc] initWithTitle:@"Warning!" message:@"Nothing typed yet!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [noInputAlert show];
+    } else {
+        [self.textView resignFirstResponder];
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self.delegate doneWithTextInput:textInput];
+        }];
+    }
 }
 
 - (BOOL)shouldAutorotate
