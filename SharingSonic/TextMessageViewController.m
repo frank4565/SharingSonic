@@ -49,7 +49,7 @@
 
 - (IBAction)done:(UIBarButtonItem *)sender {
     NSString *textInput = self.textView.text;
-    if (textInput == nil) {
+    if ([textInput isEqualToString:@""]) {
         UIAlertView *noInputAlert = [[UIAlertView alloc] initWithTitle:@"Warning!" message:@"Nothing typed yet!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [noInputAlert show];
     } else {
